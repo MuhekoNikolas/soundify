@@ -1,0 +1,110 @@
+
+
+
+:root{
+    --c1 : #090927;
+    --c2: #111030;
+    --c2Lighter:#141339;
+    --sideBarTitleColor: #636288;
+    --sideBarLightColor:#8787ac;
+    --hoverColor:#ff516d;
+    --authorNameColor:#5e5e88;
+    --white:#fff1f3;
+    
+    --sideBarSize: 250px;
+}
+
+
+*:not(a){
+    color:var(--white);
+    font-weight:20;
+}
+
+*::placeholder{
+    color:gray;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+input, label, button{
+    display:block;
+}
+
+button, a, *[onclick]{
+    cursor: pointer !important;
+}
+
+
+#wrapper{
+    position:fixed;
+    top:0px;
+    left:0px;
+
+    width:100vw;
+    height:100vh;
+
+    display:flex;
+
+    overflow:hidden;
+    overflow-y:auto;
+
+    background:var(--c1);
+
+}
+
+.pageWrapper, .sideBar{
+    position:fixed;
+    top:0px;
+    height:100vh;
+}
+
+
+
+.sideBar{
+    left:0px;
+
+    z-index:4000;
+
+    width:var(--sideBarSize);
+
+    background: radial-gradient(circle at bottom, var(--c2Lighter), var(--c2), var(--c1));
+}
+
+.pageWrapper{
+    left:var(--sideBarSize);
+    width:calc( 100% - var(--sideBarSize) );
+
+    overflow:hidden;
+    overflow-y:auto;
+
+    display:block;
+    padding-bottom:400px !important;
+
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.pageTitle{
+    font-size:5em;
+    margin-top:-40px;
+    margin-bottom:10px;
+}
+
+.pageBackgroundImageDiv{
+    position:fixed;
+    top:0px;
+    left:var(--sideBarSize);
+
+    width:calc( 100% - var(--sideBarSize) );
+    height:100vh;
+
+    opacity:0.08;
+    z-index:-1;
+
+    background-position:center center !important;
+    background-size:100% 100% !important;
+    background-repeat:no-repeat !important;
+}

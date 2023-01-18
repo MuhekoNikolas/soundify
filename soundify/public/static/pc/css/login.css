@@ -1,0 +1,80 @@
+
+
+.field{
+    position: relative;
+    height: 52px;
+    width: 100%;
+    max-width: 150px;
+    overflow: hidden;
+}
+
+.field input{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    line-height: 52px;
+    outline: 0;
+    background-color: inherit;
+    padding-top: 25px;
+    border: none;
+    box-sizing: border-box;
+}
+
+.field .label-wrapper{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    bottom: 0;
+    background-color: inherit;
+    left: 0;
+    pointer-events: none;
+    border-bottom: 1px solid var(--hoverColor);
+}
+
+.field .label-wrapper::after{
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-bottom: 3px solid #FF9950;
+    left: 0;
+    bottom: -1px;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+}
+
+.field .label-text{
+    position: absolute;
+    bottom: 5px;
+    left: 0px;
+    transition: all 0.2s ease;
+}
+
+.field input:focus + .label-wrapper .label-text,
+.field input:valid + .label-wrapper .label-text{
+    font-size: 12px;
+    color: #FF9950 !important;
+    transform: translateY(-150%);
+}
+
+.field input:focus + .label-wrapper::after,
+.field input:valid + .label-wrapper::after{
+    transform: translateX(0%);
+}
+
+button[type=submit]{
+    background-color: #66BB00;
+	color: white;
+	padding: 14px 20px;
+	margin: 8px 0;
+	border: none;
+	border-radius: 4px;
+}
+
+button:active {
+	transform: translate(1px,1px);
+}
+
+.loginFeedbackAlert, .inputError, .signupFeedBackAlert {
+    color:red; display:block; margin-top:10px;
+}
