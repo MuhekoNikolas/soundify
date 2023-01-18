@@ -270,6 +270,23 @@
                                         //echo var_dump($songJsonInfo);
                                         
                                     ?>
+                                    <script>
+                                        function playAudio(id){
+                                            audioPlayer = document.getElementById(id)
+                                            if(audioPlayer){
+                                                if(audioPlayer.duration > 0 && !audioPlayer.paused){
+                                                    audioPlayer.pause()
+                                                } else {
+                                                    audioPlayer.play()
+                                                }
+                                            }
+                                            console.log(audioPlayer)
+                                        }
+
+                                        function addAudioToPlaylist(id){
+                                            alert("1")
+                                        }
+                                    </script>
                                         
                                         <div class="songPreviewObject" data-songInfo="<?php out(json_encode($songJsonInfo));?>"> 
                                             <div class="songPreviewObjectImage" style="background:url(/songs/<?php out($songJsonInfo->folderName) ?>/image.jpeg);"></div>
@@ -278,9 +295,10 @@
                                                 <p style="color:var(--authorNameColor);"><?php out($songJsonInfo->artist); ?></p]>
                                             </div>      
                                             <div class="songPreviewActions">
-                                                <div style="" onclick="playAudio(<?php out($songJsonInfo->id); ?>)" title="PLAY"><i class="fa-solid fa-play"></i></div>
-                                                <div style="" onclick="addAudioToPlaylist(<?php out($songJsonInfo->id); ?>)"><i class="fa-solid fa-add"></i></div>
-                                            </div>                                                                            
+                                                <div style="" onclick="playAudio(`<?php out($songJsonInfo->id); ?>`)" title="PLAY"><i class="fa-solid fa-play"></i></div>
+                                                <div style="" onclick="addAudioToPlaylist(`<?php out($songJsonInfo->id); ?>`)"> <i class="fa-solid fa-add"></i> </div>
+                                            </div>  
+                                            <audio id="<?php out($songJsonInfo->id); ?>"  style="display:none;" src="/songs/<?php out($songJsonInfo->folderName) ?>/audios/audio.mp3">                                                                      
                                         </div>
                                 <?php
                                     } else {

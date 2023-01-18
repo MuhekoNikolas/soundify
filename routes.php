@@ -47,15 +47,34 @@ get('/images/$fileName', function($fileName){
 });
 
 //Getting song images
-get('/songs/$songFolder/image.jpeg', 
+get('/songs/$songFolder/image.jpg', 
     function($songFolder){
-        $songImage = __DIR__."/soundify/public/songs/$songFolder/image.jpeg";
+        $songImage = __DIR__."/soundify/public/songs/$songFolder/image.jpg";
         if(file_exists($songImage)){
             $fileContentType = mime_content_type($songImage);
             header("Content-Type: $fileContentType");
             header("Content-Length: " . filesize($songImage));
             header("Cache-Control: no-cache, must-revalidate");
             readfile($songImage);
+            exit();
+        } else {
+            http_response_code(404);
+            echo "Not found";
+            exit();
+        }
+    }
+    
+);
+
+//Getting song audios
+get('/songs/$songFolder/audios/audio.mp3', function($songFolder){
+        $audioFile = __DIR__."/soundify/public/songs/$songFolder/audio.mp3";
+        if(file_exists($audioFile)){
+            $fileContentType = mime_content_type($audioFile);
+            header("Content-Type: $fileContentType");
+            header("Content-Length: " . filesize($audioFile));
+            header("Cache-Control: no-cache, must-revalidate");
+            readfile($audioFile);
             exit();
         } else {
             http_response_code(404);
