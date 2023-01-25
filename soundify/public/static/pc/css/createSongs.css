@@ -1,0 +1,72 @@
+
+
+/* Form container */
+form {
+    width: 50%; /* Width of the form */
+    margin: 0 auto; /* Center the form */
+    padding: 20px; /* Add some padding */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Add some rounded corners */
+}
+
+input{
+    background-color:var(--c1);
+}
+
+/* Form inputs */
+input[type="text"], input[type="file"] {
+    width: 100%; /* Make the inputs take up the full width of the form */
+    padding: 12px 20px; /* Add some padding */
+    margin: 8px 0; /* Add some margin */
+    box-sizing: border-box; /* Add some border */
+    border: 1px solid #ccc; /* Add some border */
+    border-radius: 4px; /* Add some rounded corners */
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    position: relative;
+
+    color:white;
+}
+/* Change the color of the inputs on focus */
+input[type="text"]:focus, input[type="file"]:focus, input[type="image"]:focus {
+    color:var(--c2);
+
+    border-color: green; /* Change the border color */
+    background-color: lightgray ; /* Change the background color */
+}
+
+/* Form labels */
+label {
+    position: relative;
+    top: 0px;
+    left: 0;
+    padding: 12px 20px;
+    font-size: 16px; /* Increase the font size */
+    font-weight: bold; /* Make the labels bold */
+    transition: transform 0.3s ease;
+
+}
+label:hover {
+    transform: translateX(10px);
+}
+
+/* Submit button */
+input[type="submit"] {
+    width: 100%; /* Make the button take up the full width of the form */
+    background-color: var(--submitColor); /* Change the background color */
+    color: white; /* Change the text color */
+    padding: 14px 20px; /* Add some padding */
+    margin: 8px 0; /* Add some margin */
+    border: none; /* Remove the border */
+    border-radius: 4px; /* Add some rounded corners */
+    cursor: pointer; /* Add a cursor */
+    transition: background-color 0.3s ease;
+}
+
+/* Change the color of the submit button on hover */
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+/* Add animation to the submit button */
+input[type="submit"]:active {
+    transform: scale(0.95);
+}

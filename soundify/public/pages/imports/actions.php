@@ -4,31 +4,16 @@
 <?php
     //error_reporting(E_ERROR  | E_PARSE);
 
-    function isLoggedIn($redirect=false){
 
-        if(array_key_exists("soundifyToken", $_COOKIE)){
 
-            $token = $_COOKIE["soundifyToken"];
-
-            $res = $GLOBALS["mainDB"]->query("SELECT * FROM secrets WHERE hashed_password='$token' ")->fetch_all();
-    
-            if($res == NULL){
-                return false;
-            } else {
-                $LoggedInUser = json_decode($res[0][1]);
-
-                if($redirect == true){
-                    redirect($LoggedInUser->profilePage);
-                }
-    
-                return $LoggedInUser;
-            }
-
-        } else{
-            return false;
+    function getUserSecrets($id){
+        $res =  $GLOBALS["mainDB"]->query("SELECT * FROM secrets where user_id='$id'");
+        $res = $res->fetch_all();
+        if($res == null){
+            return null;
+        } else {
+            return json_decode(json_encode($res[0]));
         }
-
-
     }
 
 
@@ -49,11 +34,16 @@
 
         $foundUser = getUser($username);
 
+
         if($foundUser == null){
             $obj["message"] = "No account found matching that username.";
         } else {
-            $hashedUserPass = $foundUser[0];
-            $userObject = json_decode("$foundUser[1]", true);
+            $foundUserSecrets = getUserSecrets($foundUser->id);
+
+            $hashedUserPass = $foundUserSecrets[0];
+
+            $userObject = $foundUser;
+
             $passwordsMatch = password_verify($password, $hashedUserPass);
 
             if($passwordsMatch == true){
@@ -61,6 +51,7 @@
                 $obj["loggedInUser"] = $userObject;
                 $obj["token"] = $hashedUserPass;
                 $obj["message"] = "Logging in";
+
                 return $obj;
             } else {
                 $obj["message"]  =  "Incorrect Username or password";
@@ -120,23 +111,6 @@
     }
 
 
-    function getUser($username){
-
-
-        $sql = "SELECT * FROM secrets WHERE JSON_VALUE(user, '$.username') LIKE '$username'; ";
-        $results = $GLOBALS["mainDB"]->query($sql);
-        $foundProfiles = $results->fetch_all();
-        if( $foundProfiles == NULL){
-            //If no account matching that name exists.
-            return NULL;
-        } else {
-            //If the account exists.
-            return $foundProfiles[0];
-        }
-        
-        
-    };
-
 
     function createUser($username, $password){
         $obj = ["success"=>false, "message"=>""];
@@ -170,21 +144,14 @@
                 $uPfp = $createdUser[2];
                 $uPage = $createdUser[3];
                 $uAdmin = $createdUser[4];
-                $uMusic = $createdUser[5];
-                $uJoinDate = $createdUser[6];
+                $uJoinDate = $createdUser[5];
 
-                $jsonCreatedUser = json_encode(array(
-                    "username" => $uUsername,
-                    "id" => $uId,
-                    "pfp" => $uPfp,
-                    "profilePage" => $uPage,
-                    "admin" => $uAdmin,
-                    "music" => preg_replace("/(\\)(\")/i", "(\\)(\\)(\")",$uMusic),
-                    "join_date" => $uJoinDate
-                ));
+
+
+                $createdUserId = $uId;
 
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT); 
-                $secretsTableQuery = "INSERT into secrets (hashed_password, user) VALUES ('$hashedPassword', '$jsonCreatedUser')";
+                $secretsTableQuery = "INSERT into secrets (hashed_password, user_id) VALUES ('$hashedPassword', '$createdUserId')";
 
                 $SecretAddded = $GLOBALS["mainDB"]->query($secretsTableQuery) == 1 ? True : False;
 

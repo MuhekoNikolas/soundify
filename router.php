@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 function get($route, $path_to_include){
   if( $_SERVER['REQUEST_METHOD'] == 'GET' ){ route($route, $path_to_include); }  
 }
@@ -65,7 +64,6 @@ function route($route, $path_to_include){
   include_once __DIR__."/$path_to_include";
   exit();
 }
-
 function out($text){echo htmlspecialchars($text);}
 function set_csrf(){
   if( ! isset($_SESSION["csrf"]) ){ $_SESSION["csrf"] = bin2hex(random_bytes(50)); }
@@ -93,17 +91,115 @@ function initDatabase(){
 
   if($db->query("SHOW TABLES LIKE 'users'")->num_rows <= 0){
     $sql = "
-        CREATE TABLE `soundify`.`users` (`username` TEXT NOT NULL , `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `pfp` TEXT NOT NULL DEFAULT 'https://smapp.tk/static/images/pfps/robot.jpg' , `profilePage` TEXT NOT NULL , `admin` BOOLEAN NOT NULL DEFAULT FALSE , `music` JSON NOT NULL DEFAULT '{\"songs\":[], \"playlists\":[]}' , `join_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`), UNIQUE (`username`)) ENGINE = InnoDB; 
+        CREATE TABLE `soundify`.`users` (`username` TEXT NOT NULL , `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `pfp` TEXT NOT NULL DEFAULT 'https://smapp.tk/static/images/pfps/robot.jpg' , `profilePage` TEXT NOT NULL , `admin` BOOLEAN NOT NULL DEFAULT FALSE ,  `join_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`), UNIQUE (`username`)) ENGINE = InnoDB; 
       ";
     $db->query($sql);
   } 
 
   if($db->query("SHOW TABLES LIKE 'secrets'")->num_rows <= 0){
     $sql = "
-        CREATE TABLE `soundify`.`secrets` (`hashed_password` TEXT NOT NULL , `user` JSON NOT NULL , `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+        CREATE TABLE `soundify`.`secrets` (`hashed_password` TEXT NOT NULL , `user_id` INT UNSIGNED NOT NULL , `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , PRIMARY KEY (`id`)) ENGINE = InnoDB;
     ";
     $db->query($sql);
   } 
 
+  if($db->query("SHOW TABLES LIKE 'songs'")->num_rows <= 0){
+    $sql = "
+      CREATE TABLE `soundify`.`songs` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `user_id` INT UNSIGNED NOT NULL , `name` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+    ";
+    $db->query($sql);
+  } 
+
+  // if($db->query("SHOW TABLES LIKE 'playlists'")->num_rows <= 0){
+  //   $sql = "
+  //     CREATE TABLE `soundify`.`playlists` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `user_id` INT UNSIGNED NOT NULL , `public_id` TEXT NOT NULL , `name` TEXT NOT NULL , PRIMARY KEY (`id`), UNIQUE (`public_id`)) ENGINE = InnoDB;
+  //   ";
+  //   $db->query($sql);
+  // } 
+
+
+
+
   return $db;
+};
+
+
+
+function getDataLink($imagePath){
+  if(file_exists($imagePath)){
+      // Read image path, convert to base64 encoding
+      $imageData = base64_encode(file_get_contents($imagePath));
+
+      // Format the image SRC:  data:{mime};base64,{data};
+      $src = 'data:'.mime_content_type($imagePath).';base64,'.$imageData;
+      return $src;
+  } else {
+      return "";
+  }
+};
+
+function isLoggedIn($redirect=false){
+
+  if(!isset($GLOBALS["mainDb"])){
+    $mainDB = initDatabase();
+    if($mainDB==null){
+        echo "An error occured while initialising the database, please make sure that you set up the app correctly";
+        return false;
+    } else {
+        $GLOBALS["mainDB"] = $mainDB;
+    }
+
+  }
+
+  if(array_key_exists("soundifyToken", $_COOKIE)){
+
+      $token = $_COOKIE["soundifyToken"];
+
+      $res = $GLOBALS["mainDB"]->query("SELECT * FROM secrets WHERE hashed_password='$token' ")->fetch_all();
+
+      if($res == NULL){
+          return false;
+      } else {
+          $LoggedInUserId = json_decode($res[0][1]);
+          $LoggedInUser = getUser($LoggedInUserId);
+          if($redirect == true){
+              redirect($LoggedInUser->profilePage);
+          }
+
+          return $LoggedInUser;
+      }
+
+  } else{
+      return false;
+  }
+
+}
+
+
+function getUser($query){
+
+
+  if(gettype($query) =="string"){
+      $sql = "SELECT * FROM users WHERE username = '$query'; ";
+  } else if(gettype($query) == "integer"){
+      $sql = "SELECT * FROM users WHERE id = '$query'; ";
+  } else {
+      return NULL;
+  }
+
+  $results = $GLOBALS["mainDB"]->query($sql);
+  $foundProfiles = $results->fetch_all();
+  if( $foundProfiles == NULL){
+      //If no account matching that name exists.
+      return NULL;
+  } else {
+      //If the account exists.
+      $foundUserArray = $foundProfiles[0];
+
+      $foundUser = json_decode(json_encode(array("username"=>$foundUserArray[0], "id"=>$foundUserArray[1], "pfp"=>$foundUserArray[2], "profilePage"=>$foundUserArray[3], "admin"=>$foundUserArray[4], "join_date"=>$foundUserArray[5])));
+
+      return $foundUser;
+  }
+  
+  
 };

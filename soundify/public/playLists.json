@@ -1,0 +1,21 @@
+
+{ 
+    "0" : {
+            "Name": "Playlist",
+            "Image": "me",
+            "user_id": 1,
+            "songs": ["songId_63cd66b6b4321"]
+
+    },
+    "2": {
+            "Name": "Playlist 2",
+            "user_id": 1,
+            "songs": ["songId_63cd66b6b4321"]
+
+    },
+    "3": {
+            "Name": "Playlist",
+            "user_id": 2,
+            "songs": ["songId_63cd66b6b4321"]
+    }
+}

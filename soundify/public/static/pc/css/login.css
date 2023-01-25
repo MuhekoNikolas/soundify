@@ -63,7 +63,7 @@
 }
 
 button[type=submit]{
-    background-color: #66BB00;
+    background-color: var(--submitColor);
 	color: white;
 	padding: 14px 20px;
 	margin: 8px 0;

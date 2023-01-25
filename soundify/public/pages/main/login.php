@@ -7,7 +7,11 @@
 
     $GLOBALS["currentPage"] = "login";
     
-    isLoggedIn($redirect=true);
+    if(isset($userLoggedIn) == true && $userLoggedIn != false){
+        redirect("/artists/$userLoggedIn->username");
+        exit();
+    };
+    
     $usernameInputError = $passwordInputError = $loginFeedBackAlert = "";
 
     
@@ -30,7 +34,7 @@
 
             if($loggedIn["success"] == true){
                 setCookie("soundifyToken", $loggedIn["token"], time() + (86400 * 30));
-                redirect($loggedIn["loggedInUser"]["profilePage"]);
+                redirect($loggedIn["loggedInUser"]->profilePage);
                 exit();
             }
         
@@ -40,7 +44,7 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" onload="mainLoadFunction()">
     <head>
         <title> <?php out($GLOBALS["CONFIG"]["APP_NAME"]);?> - Login</title>
 
@@ -60,7 +64,7 @@
             ?>
 
             <div class="pageWrapper" style="display:flex;">
-                <div class="pageBackgroundImageDiv" style="background:url(/images/<?php echo $pageBackgroundImage; ?>);"></div>
+                <div class="pageBackgroundImageDiv" style="background:url(<?php echo $pageBackgroundImage; ?>);"></div>
                 <?php
                     include(__DIR__."/../imports/topBar.php");
                 ?>
@@ -94,6 +98,10 @@
                     
                     <p>Ny bruker? <a href="/signup">Registrer Her</a></p>
                 </form>
+
+                <?php
+                    include(__DIR__."/../imports/nowPlayingControls.php");
+                ?>
             </div>
 
         </div>

@@ -21,7 +21,7 @@
         
 
     </head>
-    <body>
+    <body onload="mainLoadFunction()">
         
         <div id="wrapper">
 
@@ -30,12 +30,53 @@
             ?>
 
             <div class="pageWrapper">
-                <div class="pageBackgroundImageDiv" style="background:url(/images/<?php echo $pageBackgroundImage; ?>);"></div>
+                <div class="pageBackgroundImageDiv" style="background-image:url(<?php echo $pageBackgroundImage; ?>);"></div>
 
                 <?php
                     include(__DIR__."/../imports/topBar.php");
                 ?>
 
+                <style>
+                    .homeGreetingText{
+                        position:relative;
+                        float:right;
+
+                        font-size:40px;
+
+                        display:block;
+                        margin-right:50px;
+                        margin-bottom:40px;
+                    }
+
+                    .homeTopPlaylistsSection{
+                        position:relative;
+
+                        width:100%;
+                        height:200px;
+
+                        margin-top:40px !important;
+
+                        background:red;
+                    }
+
+
+                </style>
+
+                <div class="pageContentsWrapper">
+
+                    <h3 class="homeGreetingText">
+                        Good morning!
+                    </h3>
+
+                    <div class="homeTopPlaylistsSection">
+
+                    </div>
+
+                </div>
+
+                <?php
+                    include(__DIR__."/../imports/nowPlayingControls.php");
+                ?>
             </div>
 
         </div>

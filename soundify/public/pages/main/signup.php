@@ -7,17 +7,13 @@
 
     include_once(__DIR__."/../imports/phpMainImports.php");
 
-    $mainDB= initDatabase();
-
-    if($mainDB==null){
-        echo "An error occured while initialising the database, please make sure that you set up the app correctly";
-    } else {
-        $GLOBALS["mainDB"] = $mainDB;
-    }
-
     $GLOBALS["currentPage"] = "signup";
 
-    isLoggedIn($redirect=true);
+    if(isset($userLoggedIn) == true && $userLoggedIn != false){
+        redirect("/artists/$userLoggedIn->username");
+        exit();
+    };
+    
     $usernameInputError = $passwordInputError = $signupFeedBackAlert = $results = "";
 
 
@@ -64,7 +60,7 @@
         <link rel="stylesheet" href="/static/pc/css/signup.css">
         
     </head>
-    <body>
+    <body onload="mainLoadFunction()">
         <div id="wrapper">
             <div class="sideBar">
                 <?php 
@@ -72,7 +68,7 @@
                 ?>
             </div>
             <div class="pageWrapper" style="display:flex;">
-                <div class="pageBackgroundImageDiv" style="background:url(/images/<?php echo $pageBackgroundImage; ?>);"></div>
+                <div class="pageBackgroundImageDiv" style="background:url(<?php echo $pageBackgroundImage; ?>);"></div>
 
                 <?php
                     include(__DIR__."/../imports/topBar.php");
@@ -106,6 +102,10 @@
                     <p>Already have an account? <a href="/login">Login</a></p>
 
                 </form>
+
+                <?php
+                    include(__DIR__."/../imports/nowPlayingControls.php");
+                ?>
             </div>
 
         </div>

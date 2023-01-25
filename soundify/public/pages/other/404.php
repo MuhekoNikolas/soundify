@@ -4,14 +4,6 @@
 
     include_once(__DIR__."/../imports/phpMainImports.php");
 
-    $mainDB = initDatabase();
-    if($mainDB==null){
-        echo "An error occured while initialising the database, please make sure that you set up the app correctly";
-    } else {
-        $GLOBALS["mainDB"] = $mainDB;
-    }
-
-    $userLoggedIn = isLoggedIn();
     $GLOBALS["currentPage"] = "404";
 
 
@@ -63,7 +55,7 @@
         </style>
     </head>
 
-    <body>
+    <body onload="mainLoadFunction()">
         <div id="wrapper">
 
             <?php 
@@ -71,7 +63,7 @@
             ?>
 
             <div class="pageWrapper">
-                <div class="pageBackgroundImageDiv" style="background:url(/images/<?php echo $pageBackgroundImage; ?>);"></div>
+                <div class="pageBackgroundImageDiv" style="background:url(<?php echo $pageBackgroundImage; ?>);"></div>
 
                 <?php
                     include_once (__DIR__."/../imports/topBar.php");
@@ -83,6 +75,10 @@
                </div>
 
             </div>
+
+            <?php
+                include(__DIR__."/../imports/nowPlayingControls.php");
+            ?>
 
         </div>
 

@@ -10,8 +10,10 @@
     --hoverColor:#ff516d;
     --authorNameColor:#5e5e88;
     --white:#fff1f3;
+
+    --submitColor: #66BB00;
     
-    --sideBarSize: 250px;
+    --sideBarSize: 300px;
 }
 
 
@@ -24,6 +26,17 @@
     color:gray;
 }
 
+*::-webkit-scrollbar{
+    width:2px;
+}
+
+
+
+html{
+    scroll-behavior:smooth;
+}
+
+
 body{
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -34,6 +47,11 @@ input, label, button{
 
 button, a, *[onclick]{
     cursor: pointer !important;
+}
+
+
+.nowPlayingAudioElement::-webkit-media-controls-enclosure{
+    background:none;
 }
 
 
@@ -61,17 +79,6 @@ button, a, *[onclick]{
 }
 
 
-
-.sideBar{
-    left:0px;
-
-    z-index:4000;
-
-    width:var(--sideBarSize);
-
-    background: radial-gradient(circle at bottom, var(--c2Lighter), var(--c2), var(--c1));
-}
-
 .pageWrapper{
     left:var(--sideBarSize);
     width:calc( 100% - var(--sideBarSize) );
@@ -80,15 +87,29 @@ button, a, *[onclick]{
     overflow-y:auto;
 
     display:block;
-    padding-bottom:400px !important;
 
     flex-direction:column;
     justify-content:center;
     align-items:center;
 }
 
+.pageContentsWrapper{
+    position:relative;
+    left:0px;
+
+    width:100%;
+    height:auto;
+    min-height: calc( 100% - 60px );
+
+    display:block;
+    margin:0px;
+    margin-top:60px;
+    margin-bottom:100px;
+}
+
 .pageTitle{
     font-size:5em;
+    text-align:center;
     margin-top:-40px;
     margin-bottom:10px;
 }
@@ -105,6 +126,210 @@ button, a, *[onclick]{
     z-index:-1;
 
     background-position:center center !important;
-    background-size:100% 100% !important;
+    background-size:cover !important;
     background-repeat:no-repeat !important;
+}
+
+
+
+/* STYLES THAT AFFECT THE TOP BAR*/
+.topBar{
+    position:fixed;
+    top:0px;
+    left:var(--sideBarSize);
+
+    width: calc( 100% - var(--sideBarSize));
+    height:60px;
+
+    z-index:4000;
+
+    display:flex;
+    align-items:center;
+
+    background:none;
+}
+
+.topBar::before{
+    position:absolute;
+    content:"";
+
+    width:100%;
+    height:100%;
+
+    filter:blur(40px);
+
+    background:var(--c1);
+}
+
+.topBar *{
+    text-decoration:none;
+}
+
+.topBarSiteName{
+    position:relative;
+    left:20px;
+
+    float:right;
+
+    width:auto; 
+    height:30px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:2em;
+
+    background:none;
+
+}
+
+.topBarSiteName h3{
+    max-height:inherit;
+}
+
+.topBarUserProfile{
+    position:relative;
+    left:calc( 100% - ( var(--sideBarSize) + 110px) );
+    
+    width:auto;
+    height:50px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:none;
+}
+
+.topBarUserProfile:hover a h3{
+    color:var(--hoverColor) !important;
+}
+
+.topBarUserProfile *{
+    display:flex;
+    margin:auto;
+}
+
+.topBarUserProfilePfp{
+
+    margin-right:10px;
+
+    border:1px solid var(--c2);
+    border-radius:50px;
+
+    background:var(--c2);
+    background-repeat:no-repeat !important; 
+    background-size:cover !important; 
+    background-position:center center !important;
+}
+
+
+
+/* STYLES THAT AFFECT THE SIDE BAR*/
+.sideBar{
+    left:0px;
+
+    z-index:4000;
+
+    width:var(--sideBarSize);
+
+    background: radial-gradient(circle at bottom, var(--c2Lighter), var(--c2), var(--c1));
+}
+
+.sideBarAppName{
+    position:relative;
+
+    font-size:3em;
+    text-align:center;
+
+    display:block;
+    margin-top:90px;
+
+    background:none;
+}
+
+.sideBarSection{
+    position:relative;
+
+    width:300px;
+    height:auto;
+    min-height:200px;
+
+    margin:0px auto;
+
+    text-indent:40px;
+
+    background:none;
+}
+
+.sideBarSection * :not(.sideBarNavigationSectionLink){
+    margin:10px;
+}
+
+.sideBarSectionTitle{
+    position:relative;
+    top:10px;
+
+    font-size:25px;
+    color:var(--sideBarTitleColor);
+    text-indent:30px;
+}
+
+.sideBarNavigationSectionLink{
+
+    color:var(--sideBarLightColor);
+    font-size:20px;
+    text-decoration:none;
+
+
+    display:flex;
+}
+
+.sideBarNavigationSectionLink::after {
+    position:absolute;
+    transform: translate(0px, 15px);
+    right:70px;
+
+    content:"";
+
+    width:10px;
+    height:10px;
+
+
+    border-radius:50px;
+    display:none;
+
+    background:var(--hoverColor);
+}
+
+.sideBarNavigationSectionLink:hover{
+    color:var(--hoverColor);
+}
+
+.sideBarNavigationSectionLink:hover::after{
+        display:block;
+}
+
+.sideBarNavigationSectionLink i{
+    --iconSize: 20px;
+
+    position:relative;
+
+    color:var(--hoverColor);
+    font-size:var(--iconSize);
+
+    margin-right:-30px !important;
+
+    
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+}
+
+.fa-plus::before{
+    position:relative;
+    left:-150%;
+
 }
