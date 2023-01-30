@@ -48,8 +48,8 @@
             }
         ?>
 
-        <div class="sideBarSection sideBarNavigationSection">
-            <h3 class="sideBarSectionTitle" style="display:flex; justfiy-content:center; align-items:center;">Playlists 
+        <div class="sideBarSection sideBarPlaylistsSection">
+            <h3 class="sideBarSectionTitle" style="display:flex; justfiy-content:center; align-items:center; margin-bottom:-10px;">Playlists 
                 <?php 
                     if($userLoggedIn != false){
                         echo "

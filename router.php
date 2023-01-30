@@ -1,5 +1,7 @@
 <?php
 session_start();
+//error_reporting(E_ALL ^ E_WARNING);
+
 function get($route, $path_to_include){
   if( $_SERVER['REQUEST_METHOD'] == 'GET' ){ route($route, $path_to_include); }  
 }
@@ -110,16 +112,6 @@ function initDatabase(){
     $db->query($sql);
   } 
 
-  // if($db->query("SHOW TABLES LIKE 'playlists'")->num_rows <= 0){
-  //   $sql = "
-  //     CREATE TABLE `soundify`.`playlists` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `user_id` INT UNSIGNED NOT NULL , `public_id` TEXT NOT NULL , `name` TEXT NOT NULL , PRIMARY KEY (`id`), UNIQUE (`public_id`)) ENGINE = InnoDB;
-  //   ";
-  //   $db->query($sql);
-  // } 
-
-
-
-
   return $db;
 };
 
@@ -133,7 +125,16 @@ function getDataLink($imagePath){
       // Format the image SRC:  data:{mime};base64,{data};
       $src = 'data:'.mime_content_type($imagePath).';base64,'.$imageData;
       return $src;
-  } else {
+  } else if(substr($imagePath, 0, 4) == "http") {
+          // Read image path, convert to base64 encoding
+          $imageData = base64_encode(file_get_contents($imagePath));  
+
+          $imageMimeType = substr(get_headers($imagePath)[4], 14, 10);
+
+          // Format the image SRC:  data:{mime};base64,{data};
+          $src = 'data:'.$imageMimeType.';base64,'.$imageData;
+          return $src;
+  }else {
       return "";
   }
 };

@@ -17,7 +17,7 @@
 
 
         <script>
-                var SOUNDIFY_CONFIG = {};
+                const SOUNDIFY_CONFIG = {};
 
 
                 SOUNDIFY_CONFIG.queriedSongs = []
@@ -46,7 +46,15 @@
                         constructor(){
                                 super()
                                 this.shadow = this.attachShadow({mode:"open"})
-                                this.songInfo  = this.dataset
+                                this.songInfo  = this.dataset.songInfo
+                        }
+                }
+
+                class soundifyPlaylistPreviewElement extends HTMLElement{
+                        constructor(){
+                                super()
+                                this.shadow = this.attachShadow({mode:"open"})
+                                this.playlistInfo  = this.dataset.playlistInfo
                         }
                 }
 
@@ -55,7 +63,6 @@
                         constructor(){
                                 super()
                                 this.shadow = this.attachShadow({mode:"open"})
-                                console.log(this)
                         }
                 }
 
@@ -79,6 +86,7 @@
 
                 function defineCustomElements(){
                         customElements.define("soundify-song-preview", soundifySongPreviewElement, {extends:"div"})
+                        customElements.define("soundify-playlist-preview", soundifyPlaylistPreviewElement, {extends:"div"})
                         customElements.define("soundify-now-playing-controls", soundifyNowPlayingControlsElement, {extends:"div"})
                         customElements.define("soundify-audio", soundifyAudioElement, {extends:"audio"})
                 }

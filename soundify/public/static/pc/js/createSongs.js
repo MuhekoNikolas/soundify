@@ -58,7 +58,7 @@ function startUploadSongProccess(form){
             }
         }
 
-        fetch(`/artists/${SOUNDIFY_CONFIG.userLoggedIn.username}/songs/new`, options)
+        fetch(`/api/artists/${SOUNDIFY_CONFIG.userLoggedIn.username}/songs/new`, options)
         .then(req=>req)
         .then(req=>{
             if(!req.ok){

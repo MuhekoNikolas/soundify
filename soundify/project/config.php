@@ -5,9 +5,9 @@
             "APP_NAME" : "Soundify", 
             "APP_DESCRIPTION" : "Lorem ipsum doler sit amet.",
             "DB": { 
-            "username":"root",
-            "password":"",
-            "database":"soundify"
+                "username":"root",
+                "password":"",
+                "database":"soundify"
         }
     }';
 

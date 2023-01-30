@@ -20,7 +20,7 @@
             }
             echo(file_get_contents($FileName));
         } else {
-            echo(file_get_contents(__DIR__."/../../../404.php"));
+            include(__DIR__."/../../public/pages/other/404.php");
         }
 
     });

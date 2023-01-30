@@ -36,8 +36,6 @@
             $signupFeedBackAlert = $signedUp["message"];
 
             if($signedUp["success"] == true){
-                // echo var_dump($signedUp);
-                // exit(var_dump($signedUp));
                 setCookie("soundifyToken", $signedUp["token"], time() + (86400 * 30));
                 redirect($signedUp["createdUser"][3]);
                 exit();
@@ -58,15 +56,20 @@
         <?php  include_once(__DIR__."/../imports/scriptsAndLinks.php"); ?>
 
         <link rel="stylesheet" href="/static/pc/css/signup.css">
+
+        <script>
+            SOUNDIFY_CONFIG.currentPage = "signup";
+        </script>
         
     </head>
     <body onload="mainLoadFunction()">
         <div id="wrapper">
-            <div class="sideBar">
-                <?php 
-                    include(__DIR__."/../imports/sideBar.php");;
-                ?>
-            </div>
+
+            <?php
+                include(__DIR__."/../imports/nowPlayingControls.php");
+                include(__DIR__."/../imports/sideBar.php");
+            ?>
+
             <div class="pageWrapper" style="display:flex;">
                 <div class="pageBackgroundImageDiv" style="background:url(<?php echo $pageBackgroundImage; ?>);"></div>
 
@@ -102,10 +105,6 @@
                     <p>Already have an account? <a href="/login">Login</a></p>
 
                 </form>
-
-                <?php
-                    include(__DIR__."/../imports/nowPlayingControls.php");
-                ?>
             </div>
 
         </div>

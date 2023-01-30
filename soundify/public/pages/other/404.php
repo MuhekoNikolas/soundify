@@ -6,6 +6,8 @@
 
     $GLOBALS["currentPage"] = "404";
 
+    http_response_code(404);
+
 
 ?>
 
@@ -13,7 +15,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
     <head>
-        <title> Soundify - 404 </title>
+        <title> <?php out($GLOBALS["CONFIG"]["APP_NAME"]); ?> - 404 </title>
 
         <?php
             include(__DIR__."/../imports/meta.php");
@@ -53,13 +55,18 @@
                 font-family:Roboto,Helvetica, sans-serif;
             }
         </style>
+
+        <script>
+            SOUNDIFY_CONFIG.currentPage = "404";
+        </script>
     </head>
 
     <body onload="mainLoadFunction()">
         <div id="wrapper">
 
-            <?php 
-                include_once (__DIR__."/../imports/sideBar.php");
+            <?php
+                include(__DIR__."/../imports/nowPlayingControls.php");
+                include(__DIR__."/../imports/sideBar.php");
             ?>
 
             <div class="pageWrapper">
@@ -76,9 +83,6 @@
 
             </div>
 
-            <?php
-                include(__DIR__."/../imports/nowPlayingControls.php");
-            ?>
 
         </div>
 

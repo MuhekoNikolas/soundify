@@ -7,12 +7,23 @@ Needed pages:
         = WHere the user can login.
     A signup Page.
         - Where the user can signup
-    A settings Page.
-        - WHere the user can change the profile picture, name, etc.
-    A Profile Page.
-        - WHere the user can see his favoritted songs, and created songs.
-    A song publishing page.
-        - WHere the yser can upload a song.
+    A song creation page.
+        - Where the user can create a song with the song image and name and audio.
+    A playlist creation page.
+        - Where the user can create a playlist with the playlist image and name.
+    A playlist page.
+        - Where the user can view a playlist and play the playlists songs.
     
 
-Audio Uploading Structure:
+Song folder Structure:
+    `
+    - /public/songs/
+        - /song1_Id/
+            -/song1_audio.mp3
+            -/song1_image.png
+            -/song1_info.json
+        - /song2_Id/
+            -/song2_audio.mp3
+            -/song2_image.png
+            -/song2_info.json
+    `

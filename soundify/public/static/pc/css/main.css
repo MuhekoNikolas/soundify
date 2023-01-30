@@ -16,6 +16,9 @@
     --sideBarSize: 300px;
 }
 
+*{
+    transition: background .5s;
+}
 
 *:not(a){
     color:var(--white);
@@ -29,7 +32,6 @@
 *::-webkit-scrollbar{
     width:2px;
 }
-
 
 
 html{
@@ -47,11 +49,6 @@ input, label, button{
 
 button, a, *[onclick]{
     cursor: pointer !important;
-}
-
-
-.nowPlayingAudioElement::-webkit-media-controls-enclosure{
-    background:none;
 }
 
 
@@ -81,7 +78,7 @@ button, a, *[onclick]{
 
 .pageWrapper{
     left:var(--sideBarSize);
-    width:calc( 100% - var(--sideBarSize) );
+    width:calc( 100vw - var(--sideBarSize) );
 
     overflow:hidden;
     overflow-y:auto;
@@ -97,9 +94,9 @@ button, a, *[onclick]{
     position:relative;
     left:0px;
 
-    width:100%;
+    width:inherit;
     height:auto;
-    min-height: calc( 100% - 60px );
+    min-height: calc( 100vh - 60px );
 
     display:block;
     margin:0px;
@@ -119,7 +116,7 @@ button, a, *[onclick]{
     top:0px;
     left:var(--sideBarSize);
 
-    width:calc( 100% - var(--sideBarSize) );
+    width:calc( 100vw - var(--sideBarSize) );
     height:100vh;
 
     opacity:0.08;
@@ -138,7 +135,7 @@ button, a, *[onclick]{
     top:0px;
     left:var(--sideBarSize);
 
-    width: calc( 100% - var(--sideBarSize));
+    width: calc( 100vw - var(--sideBarSize));
     height:60px;
 
     z-index:4000;
@@ -156,7 +153,7 @@ button, a, *[onclick]{
     width:100%;
     height:100%;
 
-    filter:blur(40px);
+    filter:blur(20px);
 
     background:var(--c1);
 }
@@ -244,7 +241,7 @@ button, a, *[onclick]{
     text-align:center;
 
     display:block;
-    margin-top:90px;
+    margin-top:50px;
 
     background:none;
 }
@@ -269,7 +266,7 @@ button, a, *[onclick]{
 
 .sideBarSectionTitle{
     position:relative;
-    top:10px;
+    top:0px;
 
     font-size:25px;
     color:var(--sideBarTitleColor);
@@ -328,8 +325,480 @@ button, a, *[onclick]{
 
 }
 
+.sideBarPlaylistLink{
+    position:relative;
+    top:5px;
+
+    text-decoration:none;
+
+    margin:10px !important;
+}
+
+
+.sideBarPlaylistLink h5{
+    color:var(--sideBarLightColor);
+    
+    margin:0px !important;
+}
+
+.sideBarPlaylistLink:hover h5 {
+    color:var(--hoverColor);
+}
+
 .fa-plus::before{
     position:relative;
     left:-150%;
 
+}
+
+
+/* Now playing element css*/
+soundify-now-playing-controls{
+    position:fixed;
+    left: 0px;
+    bottom:0px;
+
+
+    width:100vw;
+    height:100px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:20px;
+
+    z-index:9000;
+    z-index:10000000;
+
+    background:var(--hoverColor);;
+}
+
+.nowPlayingAudioElement::-webkit-media-controls-enclosure{
+    background:none;
+}
+
+.soundifyNowPlayingImage{
+    position:relative;
+
+    width:90px;
+    height:90px;
+
+    border:2px solid var(--sideBarLightColor);
+    border-radius:50px;
+
+    margin-left:20px;
+
+    background-repeat:no-repeat !important;
+    background-size:cover !important;
+    background-position:center center !important;
+}
+
+soundify-now-playing-controls.playing .soundifyNowPlayingImage{
+    animation:2s .01s infinite spin;
+}
+
+.soundifyNowPlayingSongInfo{
+    display:flex;
+    flex-direction:column;
+
+    justify-content:center;
+}
+
+.soundifyNowPlayingSongInfo *{
+    margin:2px;
+}
+
+.soundifyNowPlayingSongInfo h3{
+    font-weight:bold;
+}
+
+.nowPlayingAudioElement{
+    width:600px !important;
+}
+
+.nowPlayingPlayMode{
+    display:flex;
+}
+
+.nowPlayingPlayModeIcon{
+    position:relative;
+    top:0px;
+    left:0px;
+
+    width:50px;
+    height:50px;
+
+    font-size:1.5em;
+    color:red;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background-repeat:no-repeat !important;
+    background-size:25px 25px !important;
+    background-position:center center !important;
+    background:none;
+}
+
+.nowPlayingPlayModeIcon:hover{
+    border:1px solid rgb(118, 118, 118);
+    border-radius:20px;
+}
+
+.nowPlayingPlayModeIcon i{
+    color:initial;
+}
+
+
+/* Styles for the music preview sections found at bottom of some pages*/
+.pageMusicSection{
+    position:relative;
+    top:50px;
+    left:0px;
+
+    display:grid !important;
+    grid-template-columns:repeat(2, 49% );
+    grid-column-gap:2%;
+
+    width:90%;
+    min-width:400px;
+    height:auto;
+    min-height:300px;
+
+    margin:0px auto;
+    padding-bottom:100px;
+
+    background:none;
+}
+
+.pageMusicSection .previewSection{
+    position:relative;
+    top:0px;
+    left:0px;
+
+    width:auto;
+    height:auto;
+    min-height:inherit;
+    max-height:fit-content;
+
+    border-radius:20px;
+
+    background:var(--c2Lighter);
+
+}
+
+.pageMusicSectionTitles{
+    position:relative;
+
+    text-align:start;
+    text-indent:20px;
+}
+
+.songPreviewObject{
+    position:relative;
+
+    width: 370px;
+    height:70px;
+
+    display:flex;
+    gap:20px;
+    align-items:center;
+
+    border-radius:10px;
+    margin:0px auto;
+    margin-bottom:8px;
+    padding:0px 10px;
+
+    box-shadow:2px 4px 10px var(--c1);
+
+    background:var(--c2) !important;
+}
+
+.songPreviewObject:hover{
+    box-shadow:inset 1px -2px 1px var(--hoverColor), 2px 4px 10px var(--c1);
+}
+
+.songPreviewObjectImage{
+    position:relative;
+    width:50px;
+    height:50px;
+
+    border-radius:10px;
+
+    background-repeat:no-repeat !important;
+    background-size:cover !important;
+    background-position:center center !important;
+}
+
+.songPreviewInfo{
+    position:relative;
+    top:0px;
+    left:0px;
+
+    width:auto;
+    min-width:100px;
+    height:50px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    text-align:start;
+
+    background:none;
+}
+
+.songPreviewInfo *{
+    margin:0px;
+}
+
+.songPreviewActions{
+    display:flex;
+
+}
+
+.songPreviewActions div{
+    margin-left:20px;
+}
+
+/* CSS for the playlist section of the music preview section*/
+#playlistPreviewSection .gridContainer{
+    position:relative;
+
+    display:grid;
+    grid-template-columns:repeat(2, 190px);
+    grid-gap:10px;
+    justify-content:center;
+
+    padding-bottom:10px;
+}
+
+.playlistPreviewObject{
+    position:relative;
+
+    width:190px;
+    height:150px;
+
+    display:block;
+
+    border-radius:20px;
+
+    box-shadow:2px 4px 10px var(--c1);
+
+    background:red;
+}
+
+.playlistPreviewObject:hover{
+    border:1px solid var(--hoverColor);
+}
+
+.playlistPreviewObject:before{
+    content:"";
+    position:absolute;
+    top:0px;
+    left:0px;
+
+    width:100%;
+    height:100%;
+
+    border-radius:20px;
+
+    background:var( --playlistBackgroundImage );
+    background-size:cover !important;
+    background-position:center center !important;
+    background-repeat:no-repeat !important;
+}
+
+.playlistPreviewObject:after{
+    content: attr(data-playlistName) ;
+    position:absolute;
+    bottom:0px;
+    left:0px;
+
+    width:100%;
+    height:fit-content;
+    min-height:40px;
+    max-height:100%;
+
+    color:white;
+    font-size:1rem;
+    text-align:center;
+
+    display:flex;
+    justify-content: center;
+    align-items:center;
+
+    border-radius:15px 15px 19px 19px;
+
+    filter:opacity(0.9);
+
+    background:#111030;
+}
+
+.playlistPreviewObject:hover:after{
+
+    background:var(--hoverColor);
+}
+
+
+
+/* CSS for the wrapper that makes it possible to add songs to playlists*/
+.addToPlaylistWrapper{
+    position:fixed;
+    top:49%;
+    left: calc( var(--sideBarSize) + 50px ) ;
+    transform: translateY(-51%);
+
+    width: calc( 100% - ( var(--sideBarSize) + 100px ) );
+    height:400px;
+
+    z-index:400000000;
+
+    overflow:hidden;
+    overflow-y:auto;
+    
+    border-radius:20px;
+    box-shadow:-4px -3px 4px 400px rgba(200, 100, 100, 0.1);
+
+    padding-top:20px;
+
+    background:var(--c2);
+}
+
+.addToPlaylistWrapper:hover, .addToPlaylistPreview:hover, .addToPlaylistPreview:focus{
+    border:1px solid var(--hoverColor);
+}
+
+.addToPlaylistWrapper:before{
+    position:absolute;
+    content:"";
+    top:-50%;
+    left: calc(  ( var(--sideBarSize) + 50px ) * ( 0 - 1) ) ;
+
+    width:100vw;
+    height:100vh;
+
+    z-index:-1;
+
+    filter:blur(2px);
+    opacity:0.5;
+
+    background:var(--c2);
+}
+
+.addToPlaylistsWrapperCloseButton{
+    position:relative;
+    margin-right:50px;
+    margin-top:30px;
+    float:right;
+
+    width:20px;
+    height:20px;
+
+    border-radius:3px;
+
+    color:red;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:var(--c2Lighter);
+}
+
+.addToPlaylistsWrapperTitle{
+    text-align:center;
+    font-size:20px;
+}
+
+.addToPlaylistsWrapperTitle span{
+    color:var(--hoverColor);
+}
+
+.addToPlaylistsGridContainer{
+    position:relative;
+    
+    width:calc( 100% - 50px );
+    height:auto;
+    min-height:200px;
+
+    display:grid;
+    grid-template-columns:repeat(4, 150px);
+    grid-gap:2px;
+    justify-content:center;
+    align-content:center;
+
+    margin:0px auto;
+    padding:20px 0px;
+
+    border-radius:20px;
+
+    background:var(--c2Lighter);
+}
+
+.addToPlaylistsGridContainer .addToPlaylistPreview{
+    position:relative;
+    width:150px;
+    height:150px;
+
+    border-radius:10px;
+
+    background:red;
+}
+
+.addToPlaylistPreviewImage{
+    position:relative;
+    top:0px;
+    left:0px;
+
+    width:100%;
+    height:100%;
+
+    margin-bottom:-100%;
+
+    border-radius:inherit;
+
+    background-position:center !important;
+    background-size:cover !important;
+    background-repeat:no-repeat !important;
+}
+
+.addToPlaylistPreviewImage:before{
+    position:absolute;
+    content:"";
+    top:0px;
+    left:0px;
+
+    width:100%;
+    height: 100%;
+
+    opacity:0.2;
+
+    background:var(--c2);
+}
+
+
+.addToPlaylistPreviewName{
+    position:relative;
+    top:25%;
+    
+    text-shadow:1px 2px var(--c2);
+    font-size:.9;
+    text-align:center;
+}
+
+
+
+
+/* Animations */
+@keyframes spin{
+    0%{
+        transform:rotate(100deg);
+    }
+    50%{
+        transform:rotate(230deg);
+    }
+    100%{
+        transform:rotate(460deg);
+    }
 }

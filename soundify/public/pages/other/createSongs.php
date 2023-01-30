@@ -13,7 +13,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title> <?php out($GLOBALS["CONFIG"]["APP_NAME"]); ?> - HOME</title>
+    <title> <?php out($GLOBALS["CONFIG"]["APP_NAME"]); ?> - Create Song</title>
 
     <?php include_once(__DIR__."/../imports/meta.php"); ?>
     <?php  include_once(__DIR__."/../imports/scriptsAndLinks.php"); ?>
@@ -21,7 +21,9 @@
     <link rel="stylesheet" href="/static/pc/css/createSongs.css">
     <script src="/static/pc/js/createSongs.js" defer></script>
 
-
+    <script>
+        SOUNDIFY_CONFIG.currentPage = "createSongs";
+    </script>
     
 
 </head>
@@ -29,9 +31,10 @@
     
     <div id="wrapper">
 
-        <?php 
-            include(__DIR__."/../imports/sideBar.php");
-        ?>
+            <?php
+                include(__DIR__."/../imports/nowPlayingControls.php");
+                include(__DIR__."/../imports/sideBar.php");
+            ?>
 
         <div class="pageWrapper">
             <div class="pageBackgroundImageDiv" style="background-image:url(<?php echo $pageBackgroundImage; ?>);"></div>
@@ -40,12 +43,6 @@
             ?>
 
             <div class="pageContentsWrapper" style="padding-top:50px;">
-                <?php 
-                        
-                    // echo var_dump($loggedInUser);
-                    // echo json_encode($_COOKIE);
-                ?>
-
                 <h2 class="pageTitle" style="margin-top:0px;">Post a Song</h2>
                 <form enctype = "multipart/form-data" onsubmit="return startUploadSongProccess(this)">
                     <label for="songName">Name of Song:</label>
@@ -63,10 +60,6 @@
                     <input type="submit" value="Submit">
                 </form>
             </div>
-
-            <?php
-                include(__DIR__."/../imports/nowPlayingControls.php");
-            ?>
 
         </div>
 

@@ -53,13 +53,17 @@
 
         <link rel="stylesheet" href="/static/pc/css/login.css">
 
-        
+        <script>
+            SOUNDIFY_CONFIG.currentPage = "login";
+        </script>
+
     </head>
-    <body>
+    <body onload="mainLoadFunction()">
         <div id="wrapper">
             
 
-            <?php 
+            <?php
+                include(__DIR__."/../imports/nowPlayingControls.php");
                 include(__DIR__."/../imports/sideBar.php");
             ?>
 
@@ -99,9 +103,6 @@
                     <p>Ny bruker? <a href="/signup">Registrer Her</a></p>
                 </form>
 
-                <?php
-                    include(__DIR__."/../imports/nowPlayingControls.php");
-                ?>
             </div>
 
         </div>

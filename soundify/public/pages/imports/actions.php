@@ -2,10 +2,6 @@
 
 
 <?php
-    //error_reporting(E_ERROR  | E_PARSE);
-
-
-
     function getUserSecrets($id){
         $res =  $GLOBALS["mainDB"]->query("SELECT * FROM secrets where user_id='$id'");
         $res = $res->fetch_all();

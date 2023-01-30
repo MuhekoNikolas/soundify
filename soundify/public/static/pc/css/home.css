@@ -1,2 +1,129 @@
 
 
+
+.homeGreetingText{
+    position:relative;
+
+    font-size:40px;
+    text-align:end;
+
+    display:block;
+    margin-right:50px;
+    margin-top:50px;
+}
+
+.homeTopPlaylistsSection{
+    position:relative;
+
+    width:100%;
+    height:250px;
+
+    margin-top:40px;
+    padding-bottom:20px;
+
+    background:none;
+}
+
+.homeTopPlaylistsTitle{
+    font-size:30px;
+    margin:0px;
+}
+
+.homeTopPlaylistsSlide{
+    position:relative;
+
+    width:inherit;
+    height:280px;
+
+    display:flex;
+    gap:20px;
+    align-items:end;
+    overflow:hidden;
+    overflow-x:auto !important;
+    scroll-snap-type:x mandatory;
+    scroll-padding:0px 20px;
+
+    scroll-behavior:smooth;
+
+    background:none;
+}
+
+.homeTopPlaylistsSlide::-webkit-scrollbar{
+    opacity:0.2;
+    background:var(--c2);
+}
+
+.homeTopPlaylistsSlide::-webkit-scrollbar-thumb{
+    width:20px;
+
+    border-radius:20px;
+
+    background:var(--hoverColor);
+}
+
+.homeTopPlaylistsSlide::-webkit-scrollbar{transform: scale(.1) !important;}
+
+
+.homeTopPlaylist{
+    position:relative;
+
+    min-width:200px;
+    max-width:200px;
+
+    border-radius:20px;
+
+    height:250px;
+
+    margin-top:20px;
+
+    padding:10px 0px 0px 0px;
+
+    transform:scale(.9);
+
+    scroll-snap-align: start;
+
+    background:var(--c2);
+}
+
+.homeTopPlaylist:active{
+    transform:scale(1);
+    background:var(--hoverColor);
+}
+
+.homeTopPlaylist:active *{
+    color:white;
+}
+.homeTopPlaylistImage{
+    position:relative;
+
+    width:90%;
+    height:150px;
+
+    border-radius:10px;
+
+    margin:0px auto;
+
+    background-position:center center !important;
+    background-size:cover !important;
+    background-repeat:no-repeat !important;
+    background:green;
+}
+
+.homeTopPlaylistInfo{
+    position:relative;
+
+    text-align:start;
+    text-indent:20px;
+}
+
+.homeTopPlaylistInfo *{
+    font-size:.9em;
+}
+
+.homeTopPlaylistInfoName{
+    font-weight:bold;
+}
+
+.homeTopPlaylistInfoArtist{
+    color:var(--authorNameColor)
+}

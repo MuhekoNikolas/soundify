@@ -2,132 +2,125 @@
 
 
 var songsPreviewSection;
+var playlistPreviewSection;
+
+var sideBarPlaylistLinks;
+var topPlaylistsSlide;
+
 var songsToPreview = [];
 var mainWrapper;
 
 
-
 function mainLoadFunction(){
     mainWrapper = document.querySelector("#wrapper") || document.createElement("div")
+    sideBarPlaylistLinks = document.querySelector(".sideBarSection .sideBarPlaylistsSection") || document.createElement("div")
+    topPlaylistsSlide = document.querySelector(".homeTopPlaylistsSlide") || document.createElement("div")
+
     songsPreviewSection = document.querySelector("#songsPreviewSection") || document.createElement("div");
+    playlistPreviewSection = document.querySelector("#playlistPreviewSection .gridContainer") || document.createElement("div")
 
     getLoggedInUserMusic()
+
     if(SOUNDIFY_CONFIG.pageOwner != null && SOUNDIFY_CONFIG.pageOwner.id != SOUNDIFY_CONFIG.userLoggedIn.id){
         getPageOwnerMusic()
     }
 
-}
+    getAllSitePlaylists()
+    .then(sitePlaylists=>{
+        SOUNDIFY_CONFIG.sitePlaylists = sitePlaylists
 
+        if((["home","playlistPage"]).includes(SOUNDIFY_CONFIG.currentPage)){
+            //If the current page is home then add all the playlists to the playlist preview section.
+            if((["home"]).includes(SOUNDIFY_CONFIG.currentPage)){
+                ((Object.values(SOUNDIFY_CONFIG.sitePlaylists)).shuffle().slice(0,10)).forEach(playlistInfo=>{
+                    _topPlaylistPreview = createTopPlaylistPreview(playlistInfo)
+                    topPlaylistsSlide.append(_topPlaylistPreview)
+                })
+            }
 
-function updateNowPlayingActions(){
-    alert(SOUNDIFY_CONFIG.nowPlaying)
-    try{
-        if(typeof SOUNDIFY_CONFIG.nowPlaying == "object" ){
+            if(Object.keys(SOUNDIFY_CONFIG.sitePlaylists).length<=0){
+                _x_ = document.createElement("p")
+                _x_.style.textAlign = "center"
+                _x_.style.color = "var(--hoverColor)"
+                _x_.innerText = "Nothing to see here..."
+                playlistPreviewSection.append(_x_)
+            }
 
-            alert(SOUNDIFY_CONFIG.nowPlaying.songId)
-            //SOUNDIFY_CONFIG.nowPlaying
-        } else {
-            SOUNDIFY_CONFIG.nowPlaying = null
+            Object.keys(SOUNDIFY_CONFIG.sitePlaylists).shuffle().forEach(sitePlaylistKey=>{
+                sitePlaylistInfo = SOUNDIFY_CONFIG.sitePlaylists[sitePlaylistKey]
+                sitePlaylist = new playlistPreviewTemplate(sitePlaylistInfo)
+                playlistPreviewSection.append(sitePlaylist.template())
+            })
         }
-    } catch (err){
-        SOUNDIFY_CONFIG.nowPlaying = null
-    }
-}
 
-function getLoggedInUserMusic(){
-    if(SOUNDIFY_CONFIG.userLoggedIn != false){
-        loggedInUserId = SOUNDIFY_CONFIG.userLoggedIn.id 
-        getUserSongs(loggedInUserId)
-        .then(userSongs => {
-            SOUNDIFY_CONFIG.userLoggedIn.songs = userSongs
-            if(SOUNDIFY_CONFIG.pageOwner!=null && SOUNDIFY_CONFIG.pageOwner.id == SOUNDIFY_CONFIG.userLoggedIn.id){
-                SOUNDIFY_CONFIG.userLoggedIn.songs.forEach(song=>{
-                    songsPreviewSection.append(song)
-                })
-            }
-        })
-    }
-}
+        if((["playlistPage"]).includes(SOUNDIFY_CONFIG.currentPage)){
+            SOUNDIFY_CONFIG.pagePlaylist.elClass = new pagePlaylistClass(SOUNDIFY_CONFIG.pagePlaylist)
+        }
 
-function getPageOwnerMusic(){
-    if(SOUNDIFY_CONFIG.pageOwner != null && SOUNDIFY_CONFIG.pageOwner != false){
-        pageOwnerId = SOUNDIFY_CONFIG.pageOwner.id 
-        getUserSongs(pageOwnerId)
-        .then(userSongs => {
-            SOUNDIFY_CONFIG.pageOwner.songs = userSongs
-            if(SOUNDIFY_CONFIG.pageOwner.id != SOUNDIFY_CONFIG.userLoggedIn.id){
-                SOUNDIFY_CONFIG.pageOwner.songs.forEach(song=>{
-                    songsPreviewSection.append(song)
-                })
-            }
-        })
-    }
-}
+        if(SOUNDIFY_CONFIG.userLoggedIn == false){
+            ((Object.values(SOUNDIFY_CONFIG.sitePlaylists)).shuffle().slice(0,3)).forEach(playlistInfo=>{
+                _sideBarPlaylistLink = createSideBarPlaylistLink(playlistInfo)
+                sideBarPlaylistLinks.append(_sideBarPlaylistLink)
+            })
+        }
 
-
-function getUserSongs(userId){
-    return new Promise((resolve, reject)=>{
-        songsToReturn = []
-        fetch(`http://localhost/api/artists/${userId}/songs`)
-        .then(req=>req)
-        .then(req=>{
-            if(req.ok){
-                data = req.json()
-                data.then(userSongs=>{
-                    userSongs.forEach(userSong=>{
-                        previewTemplate = new songPreviewTemplate(userSong).template();
-                        songsToReturn.push(previewTemplate)
-                    })
-                    resolve(songsToReturn)
-                    return
-                })
-            } else {
-                alert("An error occured while fetching the User's songs")
-                reject("An error occured")
-                return
-            }
-        })
     })
 
-}
+    getAllSiteSongs()
+    .then(siteSongs=>{
+        SOUNDIFY_CONFIG.siteSongs = siteSongs
+        if((["home"]).includes(SOUNDIFY_CONFIG.currentPage)){
+            //If the current page is home then add all the songs to the song preview section.
+            if(Object.keys(SOUNDIFY_CONFIG.siteSongs).length<=0){
+                _x_ = document.createElement("p")
+                _x_.style.textAlign = "center"
+                _x_.style.color = "var(--hoverColor)"
+                _x_.innerText = "Nothing to see here..."
+                songsPreviewSection.append(_x_)
+            }
 
-
-
-function createNowPlayingContainer(elClass){
-    oldNowPlayingContainers = document.querySelectorAll("soundify-now-playing-controls")
-    nowPlayingCont = document.createElement("soundify-now-playing-controls")
-
-    if(oldNowPlayingContainers!=null){
-        for(cont of oldNowPlayingContainers){
-            cont.remove()
+            Object.keys(SOUNDIFY_CONFIG.siteSongs).shuffle().forEach(siteSongKey=>{
+                siteSongInfo = SOUNDIFY_CONFIG.siteSongs[siteSongKey]
+                siteSong = new songPreviewTemplate(siteSongInfo)
+                songsPreviewSection.append(siteSong.template())
+            })
         }
-    }
-
-    nowPlayingCont.innerHTML += `
-            <div class="soundifyNowPlayingImage" style="background:url(${elClass.info.image});"></div>
-    `;
-    soundifyNowPlayingSongInfo = document.createElement("div")
-    soundifyNowPlayingSongInfo.classList.add("soundifyNowPlayingSongInfo")
-    soundifyNowPlayingSongInfoName = document.createElement("h3")
-    soundifyNowPlayingSongInfoName.innerText = `${elClass.info.name}`
-    soundifyNowPlayingSongInfoArtist = document.createElement("h5")
-    soundifyNowPlayingSongInfoArtist.innerText = `${elClass.info.artist}`
-
-    soundifyNowPlayingSongInfo.append(soundifyNowPlayingSongInfoName)
-    soundifyNowPlayingSongInfo.append(soundifyNowPlayingSongInfoArtist)
-    nowPlayingCont.append(soundifyNowPlayingSongInfo)
-
-    thisAudioElement = elClass.songPreviewAudioElement
-    thisAudioElement.setAttribute("controls", "")
-    thisAudioElement.setAttribute("class", "nowPlayingAudioElement")
-    thisAudioElement.setAttribute("id", `${elClass.info.id}`)
-    thisAudioElement.style.display = "block"
-    nowPlayingCont.append(thisAudioElement)
-
-    nowPlayingCont.classList.add("playing")
+    })
 
 
-    mainWrapper.appendChild(nowPlayingCont)
 
 }
 
+
+
+
+window.onbeforeunload = function(){
+    try{
+
+        if(SOUNDIFY_CONFIG.nowPlaying != null){
+            if(SOUNDIFY_CONFIG.nowPlaying instanceof HTMLElement ){
+                if(typeof(SOUNDIFY_CONFIG.nowPlaying.elClass) == "object"){
+                    nowPlayingInfo = SOUNDIFY_CONFIG.nowPlaying.elClass.info 
+                    playedTime = SOUNDIFY_CONFIG.nowPlaying.currentTime
+                    if(typeof(nowPlayingInfo) == "object"){
+                        if(nowPlayingInfo.id != null){
+                            obj = {
+                                played: playedTime,
+                                songId: nowPlayingInfo.id
+                            }
+                            setCookie("SoundifyNowPlaying", JSON.stringify(obj))
+                            return
+                        }
+                    }
+        
+                }
+            }
+        } 
+    
+        setCookie("SoundifyNowPlaying", "")
+        return
+
+    } catch (err){
+        return
+    }
+};
