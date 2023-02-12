@@ -44,6 +44,7 @@ function mainLoadFunction(){
                 _x_.style.color = "var(--hoverColor)"
                 _x_.innerText = "Nothing to see here..."
                 playlistPreviewSection.append(_x_)
+                topPlaylistsSlide.append(_x_)
             }
 
             Object.keys(SOUNDIFY_CONFIG.sitePlaylists).shuffle().forEach(sitePlaylistKey=>{
@@ -88,6 +89,69 @@ function mainLoadFunction(){
     })
 
 
+    document.querySelectorAll(".changePfpDiv").forEach((changePfpButton)=>{
+        changePfpButton.addEventListener("click", ()=>{
+            function changePfp(evt){
+                loggedInUser = SOUNDIFY_CONFIG.userLoggedIn
+                if(loggedInUser != false && loggedInUser != null){
+                    uploadedImage = evt.target.files[0]
+                    fileReader = new FileReader()
+                    fileReader.readAsDataURL(uploadedImage)
+                    fileReader.onload = function(evt){
+                        uploadedImage = evt.target.result
+                        data = { 
+                            userId: loggedInUser.id,
+                            newProfilePicture: uploadedImage
+                        }
+                        options =  {
+                            method:"POST",
+                            body: JSON.stringify(data),
+                            headers:{
+                                "Content-Type":"application/json"
+                            }
+                        }
+                        fetch("/api/artists/pfp", options)
+                        .then(req=>{
+                            if(req.ok){
+                                req.json()
+                                .then(data=>{
+                                    if(data.success!=true){
+                                        Toastify({
+                                            text: `An error occured: ${data.message}`,
+                                            style: {
+                                              background: "linear-gradient(to right, red, var(--c2))",
+                                            }
+                                        }).showToast();
+                                        return
+                                    } else {
+                                        Toastify({
+                                            text: `${data.message}`,
+                                            style: {
+                                              background: "linear-gradient(to right, #00b09b, var(--c2))",
+                                            }
+                                        }).showToast();
+                                        location.reload()
+                                        return
+                                    }
+                                })
+                            } else {
+                                alert("An error occured")
+                            }
+                        })
+                    }
+                }
+            }
+
+            inputElement = document.createElement("input")
+            inputElement.setAttribute("type","file")
+            inputElement.setAttribute("accept","image/*")
+            inputElement.addEventListener("change", (event)=>{
+                changePfp(event)
+            })
+            inputElement.click()
+        })
+    })
+
 
 }
 
@@ -106,7 +170,7 @@ window.onbeforeunload = function(){
                         if(nowPlayingInfo.id != null){
                             obj = {
                                 played: playedTime,
-                                songId: nowPlayingInfo.id
+                                songId: nowPlayingInfo.id,
                             }
                             setCookie("SoundifyNowPlaying", JSON.stringify(obj))
                             return
@@ -121,6 +185,8 @@ window.onbeforeunload = function(){
         return
 
     } catch (err){
-        return
+        setCookie("SoundifyNowPlaying", "")
+        setCookie("error", err)
+        return false
     }
 };

@@ -42,9 +42,12 @@
                     document.querySelector(".nowPlayingAudioElement") !=null ? (()=>{
                         audioElement = document.querySelector(".nowPlayingAudioElement"); 
                         audioElement.oncanplay  = function(){
-                            this.currentTime = <?php out($nowPlaying->played+0.1); ?>;
+                            this.currentTime = <?php out($nowPlaying->played); ?>;
+
                             this.play()
                             soundifyNowPlayingCont.classList.add("playing")
+      
+
                             if(this.paused == true){
                                 soundifyNowPlayingCont.classList.remove("playing")
                             }

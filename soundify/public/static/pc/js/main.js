@@ -1,65 +1,60 @@
-
-
-
-
 Array.prototype.shuffle = function(){
-
-    //This method shuffles the array and returns the new shuffled array: Array.shuffle()
+    // Denne metoden spiller av en tilfeldig array, og bruker return på den nye tilfeldige arrayen: Array.shuffle()
     _x_ = this.sort(() => 0.5 - Math.random())
     return _x_
 }
 
 
 Array.prototype.filterSongs = function(toDrop=null){
-    //Remove duplicates and specific values from an array containg song preview objects
+    // Fjerner duplikater, og spesifikke verdier fra en liste som inneholder forhåndsviste sang objekter
     songsInThis = [] //Used to control duplicates and present them from appearing in the returned value
     _filteredArrayToReturn_ = this.filter((x)=>{
-        //Filter duplicates and remove the toDrop element from the entire array. (returning False means dont include the song in the returned array, True means include the song in the returned array)
+        // Filteret duplikerer og fjerner toDrop elementet fra hele arrayen. (Hvis det er False som blir returnert, betyr det at sangen ikke skal inkluderes i arrayen som blir returnet. Hvis det er True som blir returnert, betyr det at sangen skal inkluderes i arrayen som blir returnet  True means include the song in the returned array)
         if(x.startup==true){
-            //The song element created from a song startup Now-Playing song will have this property set to true. So we want to remove this song because there might be duplicates.
+            //Sangen sitt element som blir laget fra en sang som blir oppstartet i  Now-Playing, denne sangen vil bli sett til true. Så vi fjerner denne sangen, fordi det kan være duplikater.
             return false
         }
         
         if(songsInThis.includes(x.info.id)){
-            //If the song id is already in the songsInThis array, then this is a duplicate so filter it out.
+            // Hvis sangens id allerede finnes i arrayen songsInThis, så er det en duplikat, så filtrer den ut.
             return false
         } else {
-            songsInThis.push(x.info.id)  //If not, then add the song id in the songsInThis array
+            songsInThis.push(x.info.id)  //Hvis ikke, legg til sangen i arrayen songsInThis
             if(toDrop==null){
-                //If the toDrop argument is null, then just include this song in the return array.
+                // Hvis toDrop er null, så bare inkluder denne sangen i return arrayen
                 return true
             }
-            //If not then check if the current iterating array value's id is the same as the toDrop's id, if yes then return false else return true.
+            // Hvis ikke, så sjekk om den nåværende arrayen som itererer sin id er den samme som toDrop sin id, hvis ja, return false, ellers return true.
             return x.info.id != toDrop?.info?.id
         }
     })
 
-    return _filteredArrayToReturn_ //Return the final array
+    return _filteredArrayToReturn_ //Returner den endelige arrayen
 
 
 }
 
 
 function redirect(path="/"){
-    //Redirect the user to the given path
+    //Omdiriger mottakeren til den gitte plassen
     window.location = path;
 }
 
 
 function setCookie(name, value, expire=0.1) {
-    //Set a cookie given the cookie name, value and when the cookie should expire
-    currentDate = new Date(); // current date
+    // Sett en cookie gitt med cookiens navn, value og når cookien utløper
+    currentDate = new Date(); // Nåværende dato
     currentDate.setTime(currentDate.getTime() + (expire * 24 * 60 * 60 * 1000)); 
     expires = "expires=" + currentDate.toUTCString();
-    document.cookie = name + "=" + value+ "; " + expires + "; path=/"; //Set the cookie
+    document.cookie = name + "=" + value+ "; " + expires + "; path=/"; //Sett cookien
 }
 
 
 function getAllSitePlaylists(){
-    //Fetches and returns all Playlists available on the site
+    // Bruker fetch og returnerer alle tilgjengelige Playlistene på siden
     return new Promise((resolve, reject)=>{
         try{
-            fetch("/api/playlists") //Make an api request to the backend for the songs
+            fetch("/api/playlists") // Lager en api forespørsel til baksiden for sangene
             .then(req=>{
                 if(req.ok){
                     req.json()
@@ -77,10 +72,10 @@ function getAllSitePlaylists(){
 }
 
 function getAllSiteSongs(){
-    //Fetches and returns all songs available on the site
+    //Bruker fetch og returnerer alle sangene tilgjengelig på siden
     return new Promise((resolve, reject)=>{
         try{
-            fetch("/api/songs") //Make an api request to the backend for the songs
+            fetch("/api/songs") // Lager en api forespørsel til baksiden for sangene
             .then(req=>{
                 if(req.ok){
                     req.json()
@@ -99,17 +94,17 @@ function getAllSiteSongs(){
 
 
 function getLoggedInUserMusic(){
-    //Fetch all the logged in user's songs and playlists then add them to the page and-or save them to the SOUNDIFY_CONFIG variable
+    // Fetch alle sangene og playlistene til brukeren som er logget inn, deretter legge dem til til siden og/eller lagre dem til SOUNDIFY_CONFIG variabelen
     if(SOUNDIFY_CONFIG.userLoggedIn != false){
-        //Only do this if the user is logged in
+        //Bare gjør dette om burkeren er logget på
         loggedInUserId = SOUNDIFY_CONFIG.userLoggedIn.id 
         getUserSongs(loggedInUserId)
         .then(userSongs => {
-            //Make an api request to the backend for the songs
-            SOUNDIFY_CONFIG.userLoggedIn.songs = userSongs //Save the retrieved songs
+            //Lager en api forespørsel til baksiden for sangene
+            SOUNDIFY_CONFIG.userLoggedIn.songs = userSongs //Lager sangene som er innhentet
             if(SOUNDIFY_CONFIG.pageOwner!=null && SOUNDIFY_CONFIG.pageOwner.id == SOUNDIFY_CONFIG.userLoggedIn.id){
                 SOUNDIFY_CONFIG.userLoggedIn.songs.forEach(song=>{
-                    //Whenever SOUNDIFY_CONFIG.pageOwner is not null, that means that the current page is an artist page, so if the owner of this page is the same as the logged in user, then loop through all the retrieved songs and add them to the page's song display section.
+                    //Når SOUNDIFY_CONFIG.pageOwner ikke er null, det betyr at den siden som er i bruk er en artist side, så hvis eieren av siden er den samme brukeren som er logget inn, så loop gjennom alle innhentet sangene, og legg dem til i avspillingsseksjonen på siden
                     songsPreviewSection.append(song)
                 })
             }
@@ -117,17 +112,17 @@ function getLoggedInUserMusic(){
 
         getUserPlaylists(loggedInUserId)
         .then(userPlaylists=>{
-            //Make an api request to the backend for the playlists
+            //Lager en api forespørsel til baksiden for playlistene
             SOUNDIFY_CONFIG.userLoggedIn.playlists = userPlaylists
             if(SOUNDIFY_CONFIG.pageOwner!=null && SOUNDIFY_CONFIG.pageOwner.id == SOUNDIFY_CONFIG.userLoggedIn.id){
                 SOUNDIFY_CONFIG.userLoggedIn.playlists.forEach(playlist=>{
-                    //Whenever SOUNDIFY_CONFIG.pageOwner is not null, that means that the current page is an artist page, so if the owner of this page is the same as the logged in user, then loop through all the retrieved playlists and add them to the page's playlist display section.
+                    // //Når SOUNDIFY_CONFIG.pageOwner ikke er null, det betyr at den siden som er i bruk er en artist side, så hvis eieren av siden er den samme brukeren som er logget inn, så loop gjennom alle innhentet playlistene, og legg dem til i avspillingsseksjonen på siden
                     playlistPreviewSection.append(playlist)
                 });
             }
             
             ((SOUNDIFY_CONFIG.userLoggedIn.playlists).shuffle().slice(0,3)).forEach(playlist=>{
-                //Shuffle the playlists and add them to the side-bar so that a logged in user can access 3 of his playlists easily.
+                //Gjør playlistene tilfeldig, og legg dem til i side-baren slik at brukeren som er logget inn kan se 3 av playlistene brukeren har samtidig
                 playlistInfo = JSON.parse(playlist.dataset.playlistinfo)
                 _sideBarPlaylistLink = createSideBarPlaylistLink(playlistInfo)
                 sideBarPlaylistLinks.append(_sideBarPlaylistLink)
@@ -138,28 +133,28 @@ function getLoggedInUserMusic(){
 
 
 function getPageOwnerMusic(){
-    //Fetch all the page-owner's(if you are on the /artists/${artisId} page) songs and playlists then add them to the page and-or save them to the SOUNDIFY_CONFIG variable
+    //Fetch alle av side-eierens (hvis du er på /artists/${artisId} page) sanger og playlist, deretter legg dem til siden og/eller lagre dem til SOUNDIFY_CONFIG variabelen
     if(SOUNDIFY_CONFIG.pageOwner != null && SOUNDIFY_CONFIG.pageOwner != false){
-        //Only do this if the SOUNDIFY_CONFIG.pageOwner variable exists
+        //Bare gjør dette dersom SOUNDIFY_CONFIG.pageOwner variabelen eksisterer
         pageOwnerId = SOUNDIFY_CONFIG.pageOwner.id 
         getUserSongs(pageOwnerId)
         .then(userSongs => {
-            //Make an api request to the backend for the songs
-            SOUNDIFY_CONFIG.pageOwner.songs = userSongs //Save the retrieved songs
+            //Lager en api forespørsel til baksiden for sangene
+            SOUNDIFY_CONFIG.pageOwner.songs = userSongs //Lagrer de innhentet sangene
             if(SOUNDIFY_CONFIG.pageOwner.id != SOUNDIFY_CONFIG.userLoggedIn.id){
-                //If the pageOwner and the logged in user are not the same, then add the retrieved songs to the page. Without this check: we will have duplicate songs because I already add them in the  getLoggedInUserMusic() function thats called before this.
+                //Hvis pageOwner og brukeren som er logget inn ikke er den samme, legg til de innhentet sangene til siden. Uten denne sjekken, vil vi ha sanger som er duplikat, fordi de allerede blir lagt til i getLoggedInUserMusic() funksjonen som blir kalt før denne blir det.
                 SOUNDIFY_CONFIG.pageOwner.songs.forEach(song=>{
                     songsPreviewSection.append(song)
                 })
             }
         })
-
+        
         getUserPlaylists(pageOwnerId)
         .then(userPlaylists=>{
-            //Make an api request to the backend for the playlists
-            SOUNDIFY_CONFIG.pageOwner.playlists = userPlaylists //Save the retrieved playlists
+            //Lager en api forespørsel til baksiden for playlistene
+            SOUNDIFY_CONFIG.pageOwner.playlists = userPlaylists //Lagrer de innhentet playlistene
             if(SOUNDIFY_CONFIG.pageOwner.id != SOUNDIFY_CONFIG.userLoggedIn.id){
-                //If the pageOwner and the logged in user are not the same, then add the retrieved playlists to the page. Without this check: we will have duplicate playlists because I already add them in the  getLoggedInUserMusic() function thats called before this.
+                //Hvis pageOwner og brukeren som er logget inn ikke er den samme, legg til de innhentet playlistene til siden. Uten denne sjekken, vil vi ha playlister som er duplikat, fordi de allerede blir lagt til i getLoggedInUserMusic() funksjonen som blir kalt før denne blir det.
                 SOUNDIFY_CONFIG.pageOwner.playlists.forEach(playlist=>{
                     playlistPreviewSection.append(playlist)
                 })
@@ -170,26 +165,26 @@ function getPageOwnerMusic(){
 
 
 function getUserSongs(userId){
-    //Make an api request to the backend and return all the user's songs given the user-id.
+    //Lager en api forespørsel til baksiden, og return alle sangene til brukeren via user-id
     return new Promise((resolve, reject)=>{
-        songsToReturn = [] //Its a store that we will use for storing the songPreviewTemplate song Objects made from the fetched song info.
-        fetch(`/api/artists/${userId}/songs`) //Make the api request for the songs and pass in the userId in the url
+        songsToReturn = [] //Det er et laggerrom som blir brukt for å lagre songPreviewTemplate sangene. Objektene er laget fra sangens informasjon via fetch
+        fetch(`/api/artists/${userId}/songs`) //Lager en api forespørsel for sangene, og legger inn userId i url-en
         .then(req=>req)
         .then(req=>{
             if(req.ok){
-                //If the request to the server was successfull and the response code is 200
-                data = req.json() //Get the response json data Promise
+                // Hvis forespørselen til serveren var vellykket, er responskoden 200
+                data = req.json() //Få respons json data Promise
                 data.then(userSongs=>{
-                    //Loop through all the returned songs and turn them into songPreviewTemplate objects
+                    //Loop gjennom alle sangene som har blitt returnet, og gjør dem om til songPreviewTemplate objekter
                     userSongs.forEach(userSong=>{
                         previewTemplate = new songPreviewTemplate(userSong).template();
-                        songsToReturn.push(previewTemplate) //Add the song objects to the songsToReturn array.
+                        songsToReturn.push(previewTemplate) //Legg til sang-objektene i arrayen songsToReturn
                     })
-                    resolve(songsToReturn) //Return the songsToReturn array as the Promise value
+                    resolve(songsToReturn) //Returner arrayen songsToReturn som Promise-verdien
                     return
                 })
             } else {
-                //Let the user know if the request wasn't successfull
+                //Lar brukeren få vite at forespøreslen ikke var vellykket
                 alert("An error occured while fetching the User's songs")
                 reject("An error occured")
                 return
@@ -201,26 +196,26 @@ function getUserSongs(userId){
 
 
 function getUserPlaylists(userId){
-    //Make an api request to the backend and return all the user's playlists given the user-id.
+    //Lager en api forespørsel til baksiden, og return alle playlistene til brukeren via user-id
     return new Promise((resolve, reject)=>{ 
-        playlistsToReturn = [] //Its a store that we will use for storing the playlistPreviewTemplate playlist Objects made from the fetched playlist info.
-        fetch(`/api/artists/${userId}/playlists`) //Make the api request for the playlists and pass in the userId in the url
+        playlistsToReturn = [] //Det er et laggerrom som blir brukt for å lagre playlistPreviewTemplate playlistene. Objektene er laget fra playlistenes informasjon via fetch
+        fetch(`/api/artists/${userId}/playlists`) //Lager en api forespørsel for playlistene, og legger inn userId i url-en
         .then(req=>req)
         .then(req=>{
             if(req.ok){
-                //If the request to the server was successfull and the response code is 200
-                data = req.json() //Get the response json data Promise
+                //Hvis forespørselen til serveren var vellykket, er responskoden 200
+                data = req.json() //Få respons json data Promise
                 data.then(userPlaylists=>{
-                    //Loop through all the returned playlists and turn them into playlistPreviewTemplate objects
+                    //Loop gjennom alle playlistene som har blitt returnet, og gjør dem om til playlistPreviewTemplate objekter
                     userPlaylists.forEach(userPlaylist=>{
                         previewTemplate = new playlistPreviewTemplate(userPlaylist).template();
-                        playlistsToReturn.push(previewTemplate) //Add the song objects to the playlistsToReturn array.
+                        playlistsToReturn.push(previewTemplate) //Legg til sang-objektene i arrayen playlistToReturn
                     })
-                    resolve(playlistsToReturn) //Return the playlistsToReturn array as the Promise value
+                    resolve(playlistsToReturn) //Returner arrayen playlistsToReturn som Promise-verdien
                     return
                 })
             } else {
-                //Let the user know if the request wasn't successfull
+                //Lar brukeren få vite at forespøreslen ikke var vellykket
                 alert("An error occured while fetching the User's songs")
                 reject("An error occured")
                 return
@@ -231,29 +226,29 @@ function getUserPlaylists(userId){
 
 
 function createSideBarPlaylistLink(info){
-    //Create an HTMLElement represeting a playlist link given the playlist info, the returned Element will be added to the side bar playlist preview section
-    _anchor = document.createElement("a") //The anchor link that we will wrap the element in, so that it redirects to the playlist page when clicked.
+    //Lager et HTMLelement som representerer en playlist link basert på playlistens informasjon, elementet som blir returnert vil bli lagt til i sidebaren i playlist seksjonen 
+    _anchor = document.createElement("a") //Anchor linken som vi vil legge elementet i, slik at man blir omdirigert til playlistens side når den klikkes
     _anchor.style.textDecoration = "none"
     _anchor.setAttribute("href", `/playlists/${info.id}`)
     _anchor.classList.add("sideBarPlaylistLink")
-    _cont = document.createElement("h5") //The main element/The playlist's name
+    _cont = document.createElement("h5") //Hovedelementet/Playlistenes navn
     _cont.innerText = info.name
 
-    _anchor.append(_cont) //Wrap the main Element with the anchor
+    _anchor.append(_cont) //Legg hoved-elementet med anchor
 
-    return _anchor //Return the anchor which is the parent of the main element.
+    return _anchor //Return anchor, som er foreldre til hovedelementet
 }
 
 
 
 function createTopPlaylistPreview(info){
-    //Create a Top list HTMLElement Object that will be added to the home page Top Playlists Section
-    _anchor = document.createElement("a") //The anchor link that we will wrap the element in, so that it redirects to the playlist page when clicked.
+    //Lager et top list HTMLelement objekt som vil bli lagt til i hjemmesidens Top playlist seksjon
+    _anchor = document.createElement("a") //Anchor linken som vi vil legge elementet i, slik at man blir omdirigert til playlistens side når den klikkes
     _anchor.style.textDecoration = "none"
     _anchor.setAttribute("href",`/playlists/${info.id}`)
-    _homeTopPlaylist = document.createElement("div") //The main element: it contains all the Top Playlist's info.
+    _homeTopPlaylist = document.createElement("div") //Hovedelementet: Den inneholder alle Top Playlist's informasjon.
     _homeTopPlaylist.classList.add("homeTopPlaylist")
-    _anchor.append(_homeTopPlaylist) //Wrap the main element with the _anchor
+    _anchor.append(_homeTopPlaylist) //Legg hoved-elementet med _anchor
 
     _homeTopPlaylistImage = document.createElement("div")
     _homeTopPlaylistImage.classList.add("homeTopPlaylistImage")
@@ -275,36 +270,36 @@ function createTopPlaylistPreview(info){
 
     _homeTopPlaylist.append(_homeTopPlaylistInfo)
 
-    return _anchor; //Return the anchor containing the main Element (_homeTopPlaylist)
+    return _anchor; //Returner anchor som inneholder hoved-Elementet (_homeTopPlaylist)
 }
 
 
 function createNowPlayingContainer(elClass){
-    //Creates a Bar at the bottom of the page that shows information about the current song playing.
+    //Lager en plass på bunnen av siden, som viser informasjon om sangen som blir spilt nå
 
-    oldNowPlayingContainers = document.querySelectorAll("soundify-now-playing-controls") //Get all the currently shown Now-Playing containers and hide remove them.
+    oldNowPlayingContainers = document.querySelectorAll("soundify-now-playing-controls") //Få alle viste nåværende Now-Playing container, og gjem og fjern dem
     if(oldNowPlayingContainers!=null){
         for(cont of oldNowPlayingContainers){
-            cont.remove() //Remove the containers
+            cont.remove() //Fjern containerene
         }
     }
 
-    nowPlayingCont = document.createElement("soundify-now-playing-controls") //The container that we will use for the Now-Playing bar
+    nowPlayingCont = document.createElement("soundify-now-playing-controls") //Containeren som vi vil bruke for Now-Playing baren
     nowPlayingCont.innerHTML += `
             <div class="soundifyNowPlayingImage" style="background:url(${elClass.info.image});"></div>
-    `; //Add the image of the currently playing song
+    `; //Legg til bilde av sangen som avspilles nå
     soundifyNowPlayingSongInfo = document.createElement("div") 
     soundifyNowPlayingSongInfo.classList.add("soundifyNowPlayingSongInfo")
     soundifyNowPlayingSongInfoName = document.createElement("h3")
     soundifyNowPlayingSongInfoName.innerText = `${elClass.info.name}`
     soundifyNowPlayingSongInfoArtist = document.createElement("h5")
     soundifyNowPlayingSongInfoArtist.innerText = `${elClass.info.artist}`
-    //Add the name and the artist of the currently playing song
+    //Legg til tittel og artisten av sangen som blir spilt av nå
     soundifyNowPlayingSongInfo.append(soundifyNowPlayingSongInfoName)
     soundifyNowPlayingSongInfo.append(soundifyNowPlayingSongInfoArtist)
     nowPlayingCont.append(soundifyNowPlayingSongInfo)
 
-    //Add the audio element of the currently playing song retrieved from the parsed class's songPreviewAudioElement property element.
+    //Legg til lyd-elementet fra den nåværende spilt av sangen som er innhentet fra class-ens songPreviewAudioElement element.
     thisAudioElement = elClass.songPreviewAudioElement
     thisAudioElement.setAttribute("controls", "")
     thisAudioElement.setAttribute("class", "nowPlayingAudioElement")
@@ -312,22 +307,22 @@ function createNowPlayingContainer(elClass){
     thisAudioElement.style.display = "block"
     nowPlayingCont.append(thisAudioElement)
 
-    //Add this class so that the image gets animated.
+    //Legg til denne classen, som gjør at bilde blir animert
     nowPlayingCont.classList.add("playing")
 
 
-    //Add buttons that make it able to change playing modes.
+    //Legg til knapper som gjør at man kan endre hvilken modus som blir avspilt
     nowPlayingPlayMode = document.createElement("div")
     nowPlayingPlayMode.classList.add("nowPlayingPlayMode")
 
-    nowPlayingPlayModeIconSequence = document.createElement("div") //This button will be used to change the playing mode to sequencial mode
+    nowPlayingPlayModeIconSequence = document.createElement("div") //Denne knappen vil bli brukt til å forandre avspillingsmodusen fra playing-modus til sequencial-mode
     nowPlayingPlayModeIconSequence.classList.add("nowPlayingPlayModeIcon")
     nowPlayingPlayModeIconSequence.style = "background:url(https://cdn0.iconfinder.com/data/icons/multimedia-126/24/205_-_Multimedia_music_list_music_queue_queue_icon-1024.png);"
     nowPlayingPlayModeIconSequence.setAttribute("title","sequence mode")
     nowPlayingPlayModeIconSequence.setAttribute("onclick","sequenceSongQueue()")
     nowPlayingPlayMode.append(nowPlayingPlayModeIconSequence)
 
-    nowPlayingPlayModeIconShuffle = document.createElement("div") //This button will shuffle all the queued songs
+    nowPlayingPlayModeIconShuffle = document.createElement("div") //Denne knappen vil shuffle alle sangene som er lagt i kø
     nowPlayingPlayModeIconShuffle.classList.add("nowPlayingPlayModeIcon")
     nowPlayingPlayModeIconShuffle.setAttribute("title","shuffle mode")
     nowPlayingPlayModeIconShuffle.setAttribute("onclick","shuffleSongQueue()")
@@ -335,31 +330,31 @@ function createNowPlayingContainer(elClass){
     nowPlayingPlayMode.append(nowPlayingPlayModeIconShuffle)
     nowPlayingCont.append(nowPlayingPlayMode)
 
-    mainWrapper.append(nowPlayingCont) //Add the Now-Playing element to the page
-    return nowPlayingCont; //return the nowPlaying element so that the class that created it can perform more actions with it
+    mainWrapper.append(nowPlayingCont) //Legg til Now-Playing elementet til siden
+    return nowPlayingCont; //return nowPlaying elementet slik at classen som lagde den kan utføre flere handlinger med den
 
 }
 
 
 
 function shuffleSongQueue(){
-    //Shuffles all the songs in the current queue
-    nowPlaying = SOUNDIFY_CONFIG.nowPlaying //Get the currently playing song
+    //Shuffler alle sangene som er lagt i kø
+    nowPlaying = SOUNDIFY_CONFIG.nowPlaying //Få sangen som blir avspilt nå
     SOUNDIFY_CONFIG.nowPlaying = null
 
-    if(nowPlaying){ //If there is a currently playing song then restart and pause it
+    if(nowPlaying){ //Hvis det er en sang som blir spilt av nå, restart og pause den
         nowPlaying.currentTime = 0
         nowPlaying.pause()
     }
 
     queriedSongs = SOUNDIFY_CONFIG.queriedSongs
-    queriedSongs = queriedSongs.filterSongs(null) //Remove the duplicate songs in the current queue
+    queriedSongs = queriedSongs.filterSongs(null) //Fjerner duplikat-sangene som er lagt i kø
 
-    queriedSongs = queriedSongs.shuffle() //Shuffle the current filtered song queue
+    queriedSongs = queriedSongs.shuffle() //Shuffle de nåværende filtrerte sangene som er queuet
 
-    SOUNDIFY_CONFIG.queriedSongs = queriedSongs //Save the shuffled song queue as the real song queue
+    SOUNDIFY_CONFIG.queriedSongs = queriedSongs //Lagre sang-køen som den ekte sang-køen
 
-    toPlay = SOUNDIFY_CONFIG.queriedSongs[0] //Get the first song of the new queue and play it if it exists
+    toPlay = SOUNDIFY_CONFIG.queriedSongs[0] //Få den første sangen av den nye køen, og spill den av hvis den eksisterer
     if(toPlay){
         toPlay.currentTime = 0
         toPlay.play(toPlay)
@@ -368,18 +363,18 @@ function shuffleSongQueue(){
 
 
 function sequenceSongQueue(){
-    //Sorts all the songs in the current queue based on when they were loaded to the site.
-    nowPlaying = SOUNDIFY_CONFIG.nowPlaying //Get the currently playing song
+    //Sorter alle sangene til den nåværende queuen basert på når de ble lastet inn til siden
+    nowPlaying = SOUNDIFY_CONFIG.nowPlaying //Få sangen som blir spilt av nå
     SOUNDIFY_CONFIG.nowPlaying = null
 
-    if(nowPlaying){ //If there is a currently playing song then restart and pause it
+    if(nowPlaying){ //Hvis det er en sang som blir spilt av nå, restart og pause den
         nowPlaying.currentTime = 0
         nowPlaying.pause()
     }
  
-    queriedSongs = SOUNDIFY_CONFIG.queriedSongs.filterSongs(null) //Remove the duplicate songs in the current queue
+    queriedSongs = SOUNDIFY_CONFIG.queriedSongs.filterSongs(null) //Fjerner duplikat-sangene som er lagt i kø
     queriedSongs.sort((a,b)=>{
-        //Sort all the queued songs based on their queryIndex property(queryIndex represents when the song was loaded to the site)
+        //Sorterer alle sangene i queuen basert på deres queryIndex property(queryIndex representerer når sangen ble lastet inn til siden)
         if(a.queryIndex < b.queryIndex){
             return -1
         } else {
@@ -389,9 +384,8 @@ function sequenceSongQueue(){
 
     
     SOUNDIFY_CONFIG.queriedSongs = queriedSongs
-    toPlay = queriedSongs[0] //Get the first song of the new sorted queue and play it if it exists
+    toPlay = queriedSongs[0] //Få den første sangen fra den nye sorterte køen, og spill den av om den eksisterer
     if(toPlay){
         toPlay.play(toPlay)
     }
 }
-

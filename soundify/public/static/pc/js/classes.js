@@ -1,4 +1,4 @@
-
+//More classes in the /pages/imports/scriptsAndLinks.php file
 
 
 class songPreviewTemplate{
@@ -41,12 +41,12 @@ class songPreviewTemplate{
         this.songPreviewTotalTime.classList.add("songPreviewTotalTime")
         this.songPreviewObject.append(this.songPreviewTotalTime)
         this.songPreviewAudioElement.onloadedmetadata = ()=>{this.updateAudioPreviewAudioTime()}
-    
+
         this.songPreviewActions = document.createElement("div")
         this.songPreviewActions.classList.add("songPreviewActions")
         this.songPreviewActions.innerHTML = `
             <div id="${this.info.id}_play_button" style="cursor:pointer;" title="PLAY"><i class="fa-solid fa-play" style="color:green;"></i></div>
-            <div id="${this.info.id}_addToPlayList_button" style="cursor:pointer;"> <i class="fa-solid fa-add"></i> </div>
+            <div id="${this.info.id}_addToPlayList_button" style="cursor:pointer;"> Add to playlist <i class="fa-solid fa-add"></i> </div>
         `;
         this.playButton = this.songPreviewActions.children[0]
         this.addToPlaylistButton = this.songPreviewActions.children[1]
@@ -60,7 +60,21 @@ class songPreviewTemplate{
             this.playButton.title = "PAUSE"
             this.playButton.innerHTML = `<i class="fa-solid fa-pause" style="color:blue;"></i>`
         } 
+        
         this.songPreviewObject.append(this.songPreviewActions)
+
+        this.actionsMenuButton = document.createElement("i")
+        this.actionsMenuButton.setAttribute("class", "fa-solid fa-ellipsis-v")
+        this.actionsMenuButton.style = "cursor:pointer; width:20px; height:20px; text-align:center;"
+        this.actionsMenuButton.addEventListener("click", ()=>{this.showMenuActions(this)})
+        this.songPreviewObject.append(this.actionsMenuButton)
+
+        this.songActionsMenu = document.createElement("div")
+        this.songActionsMenu.classList.add("songPreviewActionsMenu")
+        this.songActionsMenu.append(this.addToPlaylistButton)
+
+        this.songPreviewObject.append(this.songActionsMenu)
+
 
         SOUNDIFY_CONFIG.queriedSongs.push(this)
     }
@@ -70,11 +84,32 @@ class songPreviewTemplate{
     }
 
     updateAudioPreviewAudioTime(){  
-        if(isNaN(this.songPreviewAudioElement.duration)){return}
-        this.songPreviewTotalTime.innerText = `${((this.songPreviewAudioElement.duration)/60).toFixed()}:${(((this.songPreviewAudioElement.duration)%60).toFixed())}`
-    
+        let totalNumberOfSeconds = Math.floor(this.songPreviewAudioElement.duration)
+        let hours = parseInt( totalNumberOfSeconds / 3600 );
+        let minutes = parseInt( (totalNumberOfSeconds - (hours * 3600)) / 60 );
+        let seconds = Math.floor((totalNumberOfSeconds - ((hours * 3600) + (minutes * 60))));
+        let result = (minutes < 10 ?  + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds);
+        this.songPreviewTotalTime.innerText = result
     }
 
+
+    showMenuActions(){
+        document.querySelectorAll(".shownSongMenu").forEach((_x_)=>{
+            if(_x_ != this.songActionsMenu){
+                let _x_actionsMenuButton = _x_.parentNode.children[5]
+                _x_actionsMenuButton.setAttribute("class", "fa-solid fa-ellipsis-v")
+                _x_.classList.remove("shownSongMenu")
+            }
+        })
+
+        if( this.songActionsMenu.classList.contains("shownSongMenu") ){
+            this.songActionsMenu.classList.remove("shownSongMenu")
+            this.actionsMenuButton.setAttribute("class", "fa-solid fa-ellipsis-v")
+        } else {
+            this.songActionsMenu.classList.add("shownSongMenu")
+            this.actionsMenuButton.setAttribute("class", "fa-solid fa-x")
+        }
+    }
 
     play(elClass){
         //elClass is basically 'this' but using 'this' in an event (onclick) will referer to the window element instead of the class.
@@ -139,6 +174,10 @@ class songPreviewTemplate{
         document.querySelectorAll(".addToPlaylistWrapper").forEach(_X_=>{
             _X_.remove()
         })
+
+        if(SOUNDIFY_CONFIG.userLoggedIn == false){
+            redirect("/login")
+        }
 
         let _addToPlaylistWrapper = document.createElement("div")
         _addToPlaylistWrapper.classList.add("addToPlaylistWrapper")
@@ -278,6 +317,7 @@ class pagePlaylistClass{
             if(req.ok){
                 req.json()
                 .then(pagePlaylistSongs=>{
+                    pagePlaylistSongs = pagePlaylistSongs.reverse()
                     if(pagePlaylistSongs.length<=0){
                         _x_ = document.createElement("p")
                         _x_.style.textAlign = "center"
@@ -287,6 +327,16 @@ class pagePlaylistClass{
                     }
                     for(let pagePlaylistSongInfo of pagePlaylistSongs){
                         let pagePlaylistSong = new songPreviewTemplate(pagePlaylistSongInfo)
+                        if(SOUNDIFY_CONFIG.userLoggedIn != false && SOUNDIFY_CONFIG.userLoggedIn.username == SOUNDIFY_CONFIG.pagePlaylist.user){
+                            let thisSong_removeFromPlaylistButton = document.createElement("div")                    
+                            thisSong_removeFromPlaylistButton.innerHTML = `Remove <i class="fa-solid fa-x"></i>`
+                    
+                            thisSong_removeFromPlaylistButton.addEventListener("click", ()=>{this.removeSongFromPlaylist(this, pagePlaylistSongInfo.id)})
+                            pagePlaylistSong.songActionsMenu.append(thisSong_removeFromPlaylistButton)
+                            console.log(pagePlaylistSong.songActionsMenu)
+                        }
+
+
                         pagePlaylistSong.songPreviewAudioElement.addEventListener("ended", ()=>{
                             this.playButton.innerHTML = '<i class="fa-solid fa-play"></i>'
                             this.playButton.style.background = "green"
@@ -316,6 +366,35 @@ class pagePlaylistClass{
                   }).showToast();
             }
         })
+    }
+
+    removeSongFromPlaylist(elClass=this, songId){
+        if(elClass.info.id != null && songId != null){
+            let options = {
+                method: "POST",
+                body: JSON.stringify({songId:songId}),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+
+
+            fetch(`/api/playlists/${elClass.info.id}/songs/remove`, options)
+            .then(req=>{
+                req.json().then(data=>{
+                    if(data.success == true){
+                        location.reload();
+                    } else {
+                        Toastify({
+                            text: `Error removing song from playlist: ${data.message}`,
+                            style: {
+                              background: "linear-gradient(to right, red, var(--c2))",
+                            }
+                          }).showToast();
+                    }
+                })
+            })
+        }
     }
 
     play(){

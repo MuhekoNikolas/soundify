@@ -74,7 +74,7 @@ function startUploadSongProccess(form){
             try{
                 req.json()
                 .then(data=>{
-                    if(data.success == false){
+                    if(data.success != true){
                         Toastify({
                             text: `An error occured: ${data.message}`,
                             style: {

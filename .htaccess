@@ -1,4 +1,6 @@
-
-RewriteEngine On
-RewriteCond %{REQUEST_URI}  !(\.webp|\.gif|\.zip|\.svg|\.pdf)$
-RewriteRule (.*) routes.php [QSA,L]
+#Initiate the htaccess rewrite engine
+RewriteEngine On 
+#Disable acess to all requests to urls ending with those extensions. Could be useful to block access to .env files.
+RewriteCond %{REQUEST_URI}  !(\.webp|\.gif|\.zip|\.svg|\.pdf)$ 
+#Redirect all urls to the routes.php file.
+RewriteRule (.*) routes.php [QSA,L] 

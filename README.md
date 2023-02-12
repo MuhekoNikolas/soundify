@@ -110,8 +110,6 @@
 
 ## SETTING UP THE APP
 <div class="section" id="setup">
-Is this ok?
-
 Due to the nature of our soundify app, we had to use the <a href="https://phprouter.com/">phprouter</a> external package for managing routes, and I couldn't find any way to have the .htaccess file in any directory other than the root one. So this makes it impossible to have the file structure that was specified in the requirements, in order to use this app: <li>You must replace your htdocs folder with our folder. Just rename you htdocs folder to something different and rename our soundify folder to htdocs. Then open XAMPP control panel and run apache and mysql. Then go to localhost and view the app.</li>
 </div>
 
@@ -174,3 +172,4 @@ Due to the nature of our soundify app, we had to use the <a href="https://phprou
     <h3>App's functionality</h3>
     <p>To see what classes the app uses and their functions please refer to the ./soundifyDrawIO.drawio file. You might need a vscode extension such as <a href="https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio">draw.io - Integration</a> to view the file</p>
 </div>
+This markdown document is completed yet.

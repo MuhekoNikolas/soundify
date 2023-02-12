@@ -46,7 +46,7 @@
             ?>
 
             <div class="pageWrapper" style="display:block !important;">
-                <div class="pageBackgroundImageDiv" style="background:url(<?php echo $pageBackgroundImage; ?>);"></div>
+                <div class="pageBackgroundImageDiv" style="background:url(<?php echo $pagePlaylist->image; ?>), url(<?php echo $pageBackgroundImage; ?>);"></div>
 
                 <?php
                     include(__DIR__."/../imports/topBar.php");
@@ -59,7 +59,7 @@
                         <div class="playlistPageInfoPreview" style="background:url(<?php out($pagePlaylist->image); ?>);">
                             <div>
                                 <h3><?php out($pagePlaylist->name); ?></h3>
-                                <p><?php out($pagePlaylist->user); ?></p>
+                                <a href="/artists/<?php out($pagePlaylist->user); ?>" style="text-decoration:none;"><?php out($pagePlaylist->user); ?></a>
                             </div>
                             <button class="playlistPlayButton" style="display:none;">
                                 <i class="fa-solid fa-play"></i>

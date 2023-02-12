@@ -75,7 +75,7 @@
                 <div class="pageContentsWrapper">
                     <div>
                         <div class="artistPageProfilePreview">
-                            <div class="artistPageProfilePreviewPfp" style="background:url(<?php out($pageOwner->pfp); ?>);">
+                            <div class="artistPageProfilePreviewPfp <?php if($userLoggedIn != false && $pageOwner->id == $userLoggedIn->id) {echo "changePfpDiv";} ?>" style="background:url(<?php out($pageOwner->pfp); ?>);">
                             </div>
                             <div class="artistPageProfilePreviewName">
                                 <h3> <?php out(preg_replace("/(?>=[A-Za-z])\_(?!\_)/is", " ", $pageOwner->username)); ?> </div>

@@ -3,7 +3,7 @@
 
     //Getting all playlists
     get('/api/playlists', function(){
-        $playlistsFile = __DIR__."/../../public/playlists.json";
+        $playlistsFile = __DIR__."/../../public/playLists.json";
         
         header("Content-Type: application/json");
         echo json_encode(json_decode(file_get_contents($playlistsFile)), JSON_PRETTY_PRINT);
@@ -12,7 +12,7 @@
 
     //Getting playlist songs
     get('/api/playlists/$playlistId/songs', function($playlistId){
-        $playlistsFile = __DIR__."/../../public/playlists.json";
+        $playlistsFile = __DIR__."/../../public/playLists.json";
         $allPagePlaylists = json_decode(file_get_contents($playlistsFile), true);
         if(key_exists($playlistId, $allPagePlaylists)){
             $pagePlaylist = $allPagePlaylists[$playlistId];
@@ -27,7 +27,8 @@
                 }
             }
             echo json_encode($_x_);
-
+            exit;
+            
         } else {
             echo json_encode(array());
             exit;
@@ -38,11 +39,11 @@
         
     //Getting User Playlists
     get('/api/artists/$artistId/playlists', function($artistId){
-        $playlistsFile = __DIR__."/../../public/playlists.json";
+        $playlistsFile = __DIR__."/../../public/playLists.json";
 
         if(file_exists($playlistsFile)){
             $allPlayLists = json_decode(file_get_contents($playlistsFile), true);
-            if($allPlayLists != null){
+            if($allPlayLists != null && count($allPlayLists) >= 1){
                 header("Content-Type: application/json");
                 $data = array();
                 foreach($allPlayLists as $objKey=>$objVal){
@@ -57,13 +58,12 @@
                 exit;
 
             } else {
-                http_response_code(400);
-                echo '{"success":"false", "message":"An error occured"}';
+                echo '[]';
                 exit;
             }
         } else {
             file_put_contents($playlistsFile, json_encode(array(), JSON_PRETTY_PRINT));
-            echo '{"success":"true", "data":"{}"}';
+            echo '[]';
             exit;
         }
 

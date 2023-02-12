@@ -351,6 +351,10 @@ button, a, *[onclick]{
 
 }
 
+.fa-x{
+    color:red;
+}
+
 
 /* Now playing element css*/
 soundify-now-playing-controls{
@@ -367,7 +371,6 @@ soundify-now-playing-controls{
     align-items:center;
     gap:20px;
 
-    z-index:9000;
     z-index:10000000;
 
     background:var(--hoverColor);;
@@ -555,6 +558,45 @@ soundify-now-playing-controls.playing .soundifyNowPlayingImage{
 .songPreviewActions{
     display:flex;
 
+}
+
+.songPreviewActionsMenu{
+    position:absolute;
+    top:-30px;
+    left: calc( 100% - 20px );
+    margin-bottom:0px;
+
+    width:auto;
+    height:auto;
+    min-height:150px;
+    min-width:150px;
+
+    z-index: 11000000;
+
+    display:none;
+
+    box-shadow:inset -2px 1px 10px var(--hoverColor);
+    border-radius:20px;
+
+    background:var(--c1);
+}
+
+.songPreviewActionsMenu.shownSongMenu{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
+    align-items:center;
+}
+
+.songPreviewActionsMenu.shownSongMenu *{
+    font-size:.9em;
+    cursor:pointer;
+    margin-top:2px;
+}
+
+.songPreviewActionsMenu.shownSongMenu *:hover{
+    color:var(--hoverColor);
 }
 
 .songPreviewActions div{
@@ -788,6 +830,50 @@ soundify-now-playing-controls.playing .soundifyNowPlayingImage{
 }
 
 
+
+
+.changePfpDiv{
+    cursor:pointer;
+}
+
+.changePfpDiv:hover::after{
+    position:absolute;
+    content: "";
+    top:0px;
+    left:0px;
+
+    width:100%;
+    height:100%;
+
+    opacity:0.8;
+
+    border-radius:inherit;
+    background:var(--c2Lighter);
+}
+
+.changePfpDiv::before{
+    position:absolute;
+    content: "";
+    top:0px;
+    left:0px;
+
+    width:100%;
+    height:100%;
+
+    border-radius:inherit;
+
+    display:none;
+
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-size:cover !important;
+    background:red;
+    background:url(https://th.bing.com/th/id/R.175ec068f638f97df7749b23c803ab2d?rik=o1qHPbbG5Xw9Ig&riu=http%3a%2f%2fservmask.com%2fimg%2fproducts%2fftp.png&ehk=pZGQk0uk6hgeGJW5F4oUIy9wZ9cBYZysiR8ThdnDIl0%3d&risl=&pid=ImgRaw&r=0);
+}
+
+.changePfpDiv:hover::before{
+    display:block;
+}
 
 
 /* Animations */

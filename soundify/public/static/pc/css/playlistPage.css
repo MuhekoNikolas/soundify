@@ -49,7 +49,7 @@
     background:var(--c2);
 }
 
-.playlistPageInfoPreview div p{
+.playlistPageInfoPreview div a{
     position:relative;
 
     margin:0px;
@@ -67,7 +67,7 @@
     width:200px;
     height:75px;
 
-    border:none !important;
+    border:2px solid white !important;
     border-radius:10px;
 
     box-shadow:2px 4px 10px var(--c1);

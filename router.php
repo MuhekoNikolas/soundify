@@ -1,6 +1,6 @@
 <?php
 session_start();
-//error_reporting(E_ALL ^ E_WARNING);
+error_reporting(E_ALL ^ E_WARNING);
 
 function get($route, $path_to_include){
   if( $_SERVER['REQUEST_METHOD'] == 'GET' ){ route($route, $path_to_include); }  
@@ -93,23 +93,37 @@ function initDatabase(){
 
   if($db->query("SHOW TABLES LIKE 'users'")->num_rows <= 0){
     $sql = "
-        CREATE TABLE `soundify`.`users` (`username` TEXT NOT NULL , `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `pfp` TEXT NOT NULL DEFAULT 'https://smapp.tk/static/images/pfps/robot.jpg' , `profilePage` TEXT NOT NULL , `admin` BOOLEAN NOT NULL DEFAULT FALSE ,  `join_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`), UNIQUE (`username`)) ENGINE = InnoDB; 
+        CREATE TABLE `users` (`username` TEXT NOT NULL , `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `pfp` TEXT NOT NULL DEFAULT 'https://smapp.tk/static/images/pfps/robot.jpg' , `profilePage` TEXT NOT NULL , `admin` BOOLEAN NOT NULL DEFAULT FALSE ,  `join_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`), UNIQUE (`username`)) ENGINE = InnoDB; 
       ";
+    $db->query($sql);
+
+    $sql = '
+    INSERT INTO `users` (username, profilePage) VALUES ("niko","/artists/niko");
+    ';
     $db->query($sql);
   } 
 
   if($db->query("SHOW TABLES LIKE 'secrets'")->num_rows <= 0){
     $sql = "
-        CREATE TABLE `soundify`.`secrets` (`hashed_password` TEXT NOT NULL , `user_id` INT UNSIGNED NOT NULL , `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+        CREATE TABLE `secrets` (`hashed_password` TEXT NOT NULL , `user_id` INT UNSIGNED NOT NULL , `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , PRIMARY KEY (`id`)) ENGINE = InnoDB;
     ";
+    $db->query($sql);
+    $sql = '
+    INSERT INTO `secrets` (hashed_password, user_id) VALUES ("$2y$10$gOP8yBXPgigtEISUk3IVmuaqt.7RSiTdrMpVdbI7mYN6xsvh.8qqy","1");
+  ';
     $db->query($sql);
   } 
 
   if($db->query("SHOW TABLES LIKE 'songs'")->num_rows <= 0){
     $sql = "
-      CREATE TABLE `soundify`.`songs` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `user_id` INT UNSIGNED NOT NULL , `name` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+      CREATE TABLE `songs` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `user_id` INT UNSIGNED NOT NULL , `name` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
     ";
     $db->query($sql);
+
+    $sqlSongInserts = array("INSERT INTO `songs` (user_id, name) VALUES ('1','songId_63dce6208d5ee');", "INSERT INTO `songs` (user_id, name) VALUES ('1','songId_63dce71c7ed4c');", "INSERT INTO `songs` (user_id, name) VALUES ('1','songId_63dce772b1af9');", "INSERT INTO `songs` (user_id, name) VALUES ('1','songId_63dce7ba9aaa4');", "INSERT INTO `songs` (user_id, name) VALUES ('1','songId_63dd2073e2a9e');","INSERT INTO `songs` (user_id, name) VALUES ('1','songId_63dd220348a6a');","INSERT INTO `songs` (user_id, name) VALUES ('1','songId_63dd26dfe7097');", "INSERT INTO `songs` (user_id, name) VALUES ('1','songId_63dd27eb97c9e');");
+    foreach($sqlSongInserts as $sql){
+      $db->query($sql);
+    }
   } 
 
   return $db;
@@ -128,12 +142,29 @@ function getDataLink($imagePath){
   } else if(substr($imagePath, 0, 4) == "http") {
           // Read image path, convert to base64 encoding
           $imageData = base64_encode(file_get_contents($imagePath));  
+          if(is_array(json_decode(json_encode(get_headers($imagePath))))){
+            $headersString = implode("%",json_decode(json_encode(get_headers($imagePath))));
+          } else {
+            return "";
+          }
 
-          $imageMimeType = substr(get_headers($imagePath)[4], 14, 10);
+          $findMimeTypeRegex = "/%Content-Type\: [a-zA-Z\/]+/is";
 
-          // Format the image SRC:  data:{mime};base64,{data};
-          $src = 'data:'.$imageMimeType.';base64,'.$imageData;
-          return $src;
+          $contentTypeExists = preg_match($findMimeTypeRegex, $headersString, $matches); 
+          if($contentTypeExists==1){
+            if(count($matches) < 1){
+              return "";
+            }
+
+            $imageMimeType = substr($matches[0], 15, strlen($matches[0])-15);
+
+            // Format the image SRC:  data:{mime};base64,{data};
+            $src = 'data:'.$imageMimeType.';base64,'.$imageData;
+            return $src;
+
+          } else {
+            return "";
+          }
   }else {
       return "";
   }

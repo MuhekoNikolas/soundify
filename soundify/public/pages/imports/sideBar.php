@@ -53,7 +53,7 @@
                 <?php 
                     if($userLoggedIn != false){
                         echo "
-                        <div onclick='redirect(\"/playlists/new\")' style='display:flex; justify-content:center; margin-left:40px; align-items:center;'>
+                        <div onclick='redirect(\"/artists/".$userLoggedIn->username."/playlists/new\")' style='display:flex; justify-content:center; margin-left:40px; align-items:center;'>
                             <i class='fa-solid fa-plus' style='width:20px; box-sizing:border-box; color:var(--hoverColor);'></i>
                         </div>
                         ";

@@ -24,7 +24,12 @@
                 if(is_dir(__DIR__."/../../public/songs/".$postData->songInfo->id)){
                     $obj = array("success"=>false, "message"=>"");
                     $savedPlaylists = json_decode(file_get_contents(__DIR__."/../../public/playLists.json"));
-                    if(isset($savedPlaylists->$playlistId)){                       
+                    if(is_array($savedPlaylists->$playlistId->songs) == false){
+                        $savedPlaylists->$playlistId->songs = json_decode(json_encode($savedPlaylists->$playlistId->songs), true);
+                    }
+
+                    if(isset($savedPlaylists->$playlistId)){          
+           
                         if(in_array($postData->songInfo->id,  $savedPlaylists->$playlistId->songs) == true){
                             $obj["success"] = false;
                             $obj["message"] = "Song is already in this playlist";
@@ -62,6 +67,7 @@
         }
     });
     
+
     //Creating playlists Post route
     post('/api/artists/$artistName/playlists/new', function($artistName){
         $loggedInUser = isLoggedIn();
@@ -268,7 +274,7 @@
             }
         }
 
-        if(preg_match("/image\/(.)+/i", mime_content_type($postData->image)) != true){
+        if( getimagesize($postData->image) == 0 ||  getimagesize($postData->image) == false){
             $obj->success = false;
             $obj->message = "The attached song image file wasnt an image.";
             header("Content-Type: application/json");
@@ -277,7 +283,8 @@
             return false;
         }
 
-        if(preg_match("/audio\/(mp3|wav|mpeg|mp4)/i", mime_content_type($postData->audio)) != true){
+        if(preg_match("/audio\/(.)+/i", mime_content_type($postData->audio)) != true){
+            echo mime_content_type($postData->audio);
             $obj->success = false;
             $obj->message = "The attached song audio file isnt supported.";
             header("Content-Type: application/json");
@@ -325,6 +332,141 @@
 
         echo json_encode($obj);
         exit;
+    });
+
+    //Updating a user's profile image
+    post("/api/artists/pfp", function(){
+        $loggedInUser = isLoggedIn();
+        $postData = json_decode(file_get_contents("php://input"));
+        if(isset($postData->userId) == false){
+            http_response_code(403);
+            $obj = array("success"=>false, "message"=>"Missing the user's id in the post request.");
+            header("Content-Type: application/json");
+            echo json_encode($obj);
+            exit();
+            return;
+        } else if(isset($postData->newProfilePicture) == false){
+            http_response_code(403);
+            $obj = array("success"=>false, "message"=>"Missing the new profile picture in the post request.");
+            header("Content-Type: application/json");
+            echo json_encode($obj);
+            exit();
+            return;
+        }
+
+        if($loggedInUser == false){
+            http_response_code(403);
+            $obj = array("success"=>false, "message"=>"Must be logged in.");
+            header("Content-Type: application/json");
+            echo json_encode($obj);
+            exit();
+            return;
+
+        } else if($loggedInUser->id != $postData->userId){
+            http_response_code(403);
+            $obj = array("success"=>false, "message"=>"Access denied.");
+            header("Content-Type: application/json");
+            echo json_encode($obj);
+            exit();
+            return;
+        } 
+
+        try{
+            $uploadedImage_isImage = preg_match("/image\/(.)+/i", mime_content_type($postData->newProfilePicture));
+            if($uploadedImage_isImage == true){
+                if( strlen($postData->newProfilePicture) >= 100000) {
+                    header("Content-Type: application/json");
+                    $obj = json_decode(json_encode(["success"=>false, "message"=>"This image is too large: maximum size is 70 kb."]), false);
+                    echo json_encode($obj);
+                    exit;
+                    return;
+                };
+
+                $updatedSuccess = $GLOBALS["mainDB"]->query("UPDATE users SET pfp = '".$postData->newProfilePicture."' WHERE id ='".$postData->userId."'; ");
+                if($updatedSuccess == 1){
+                    header("Content-Type: application/json");
+                    $obj = json_decode(json_encode(["success"=>true, "message"=>"Updated successfully"]), false);
+                    echo json_encode($obj);
+                    exit;
+                    return;
+                } else {
+                    header("Content-Type: application/json");
+                    $obj = json_decode(json_encode(["success"=>false, "message"=>"An error occured"]), false);
+                    echo json_encode($obj);
+                    exit;
+                    return;
+                }
+            } else {
+                header("Content-Type: application/json");
+                $obj = json_decode(json_encode(["success"=>false, "message"=>"Please make sure the image link is for a real image"]), false);
+                echo json_encode($obj);
+                exit;
+                return;
+            }
+        } catch(Exception $err){
+            header("Content-Type: application/json");
+            $obj = json_decode(json_encode(["success"=>false, "message"=>"An error occured"]), false);
+            echo json_encode($obj);
+            exit;
+            return;
+        }
+    });
+
+    //Removing songs from playlists
+    post('/api/playlists/$playlistId/songs/remove', function($playlistId){
+        $loggedInUser = isLoggedIn();
+        $postData = json_decode(file_get_contents("php://input"));
+
+        if($loggedInUser==false){
+            header("Content-Type: application/json");
+            echo json_encode(array("success"=>false, "message"=>"User not logged In"));
+            exit;
+            return;
+        }
+
+        if(isset($postData->songId) == false){
+            header("Content-Type: application/json");
+            echo json_encode(array("success"=>false, "message"=>"Please include the song id"));
+            exit;
+            return;
+        }
+
+        $playlistsFile = __DIR__."/../../public/playLists.json";
+        $allPagePlaylists = json_decode(file_get_contents($playlistsFile), true);
+
+        if(key_exists($playlistId, $allPagePlaylists)){
+            $playlistToChange = $allPagePlaylists[$playlistId];
+
+            if($playlistToChange["user_id"] != $loggedInUser->id){
+                header("Content-Type: application/json");
+                echo json_encode(array("success"=>false, "message"=>"Permission denied"));
+                exit;
+                return;
+            }
+
+            if( in_array($postData->songId, $playlistToChange["songs"]) == false){
+                header("Content-Type: application/json");
+                echo json_encode(array("success"=>false, "message"=>"This song doesnt exist in this playlist."));
+                exit;
+                return;
+            }
+
+            $playlistSongs = $playlistToChange["songs"];
+
+            $playlistSongs = array_diff($playlistSongs, array($postData->songId));
+            $playlistToChange["songs"] = $playlistSongs;
+
+            $allPagePlaylists[$playlistId] = $playlistToChange;
+            file_put_contents(__DIR__."/../../public/playLists.json", json_encode($allPagePlaylists, JSON_PRETTY_PRINT));
+
+            header("Content-Type: application/json");
+            echo json_encode(array("success"=>true, "message"=>"Deleted song from playlist"));
+            exit;
+            
+        } else {
+            echo json_encode(array("success"=>false, "message"=>"This playlist doesnt exist"));
+            exit;
+        }
     });
 
 

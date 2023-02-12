@@ -9,7 +9,7 @@
 
     //Favicon
     get('/favicon.ico', function(){
-        $fileType = mime_content_type(__DIR__."/favicon.ico");
+        $fileType = mime_content_type(__DIR__."/../../../favicon.ico");
         header("Content-Type: $fileType");
         readfile(__DIR__."/../../../favicon.ico");
         exit();
@@ -23,7 +23,6 @@
     //Playlist Page
     get('/playlists/$playlistId', function($playlistId){
         $allPlaylists = json_decode(file_get_contents(__DIR__."/../../public/playLists.json"), true);
-        
 
         if( array_key_exists($playlistId, $allPlaylists) == false){
             include(__DIR__."/../../public/pages/other/404.php");
@@ -54,21 +53,6 @@
         }
     });
 
-
-    //Creating Playlists route
-    get('/artists/$artistName/playlists/new', function($artistName){
-        $loggedInUser = isLoggedIn();
-        if($loggedInUser == false){
-            header("Location: /artists/$artistName");
-            exit();
-        } else if($loggedInUser->username != $artistName){
-            header("Location: /artists/$artistName");
-            exit();
-        }
-
-        include(__DIR__."/../../public/pages/other/createPlaylist.php");
-        exit;
-    });
 
 
     //Creating Playlists route

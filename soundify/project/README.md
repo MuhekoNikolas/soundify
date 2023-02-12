@@ -171,11 +171,12 @@ Due to the nature of our soundify app, we had to use the <a href="https://phprou
     </p>
     <h4 style="color:blue;"> Why we chose to work with php.</h4>
     <p>
-        Building the app required us to have dynamic sites (Sites that could be changed automatically based on the current user.) You can view this with how the user's top bar info changes based on the logged in user. If we hadnt used php, then we would need to manually create a home.html, artistPage.html, login.html and signup.html for that user, this would throughout time fill.
-        Also with php, we are able to save playlists and songs on out file system directly from the page unlike vanilla javascript which cant change file content. 
-        I used php basically because XAMPP doesnt support nodejs and I wanted to create
-         Using php allows us to do actions like that directly from the server and also allows us to include other documents into document without copy pasting code from one file to another. You can view this with how we include the side bar, top Bar, scripts and meta data to multiple sites.
-        Also using php makes it possible for us to interact with the database and save playlists, user data and manage
+        Building the app required us to have dynamic sites (Sites that could be changed automatically based on the current user.) You can view this with how the user's top bar info changes based on the logged in user. If we hadnt used php, then we would need to manually create a home.html, artistPage.html, login.html and signup.html for that user, this would throughout time fill our storage with alot of files each time a user signed up.
+        Also with php, we are able to save playlists and songs on our file system directly from the page unlike vanilla javascript which cant change file content. 
+        I used php basically because XAMPP doesnt support nodejs and I wanted to create a fullstack application where I could control what is saved and what the user sees automatically.
+         Using php allows us to do actions like that directly from the server and also allows us to include other documents into document without copy pasting code from one file to another. You can view this with how we include the side bar, top Bar, scripts and meta data to multiple sites (The files that are imported are saved in the /soundify/public/pages/imports/ folder).
+        Also using php makes it possible for us to interact with the database and save playlists and user data.
+        I also chose to work with php because I have always wanted to try it out and this project motivated  me to learn php.
     </p>
     <p>
         I will be using mysql to save and store user data and song ids because by using mysql to save user info: mysql can automatically encrypt the data and make it secure unlike json, also mysql filters duplicates so there cant be two users with the same name/id. I will be using a mysql database called "Soundify" and create the "songs" and "users" table. 
