@@ -94,13 +94,28 @@ class songPreviewTemplate{
 
 
     showMenuActions(){
-        document.querySelectorAll(".shownSongMenu").forEach((_x_)=>{
+        for(_x_ of document.querySelectorAll(".shownSongMenu")){
             if(_x_ != this.songActionsMenu){
-                let _x_actionsMenuButton = _x_.parentNode.children[5]
-                _x_actionsMenuButton.setAttribute("class", "fa-solid fa-ellipsis-v")
-                _x_.classList.remove("shownSongMenu")
+                let _x_actionsMenuButton;
+                if(_x_.parentNode.children[0].tagName.toLowerCase() == "audio"){
+                    _x_actionsMenuButton = _x_.parentNode.children[5]
+                } else {
+                    _x_actionsMenuButton = _x_.parentNode.children[4]
+                }
+
+                if(_x_actionsMenuButton==null){
+                    alert("An error occured")
+                    continue
+                }
+
+                if(_x_actionsMenuButton.tagName.toLowerCase() == "i"){
+                    _x_actionsMenuButton.setAttribute("class", "fa-solid fa-ellipsis-v")
+                    _x_.classList.remove("shownSongMenu")
+                }
+
             }
-        })
+        }
+
 
         if( this.songActionsMenu.classList.contains("shownSongMenu") ){
             this.songActionsMenu.classList.remove("shownSongMenu")
@@ -172,6 +187,7 @@ class songPreviewTemplate{
     addToPlaylistInit(elClass){
         //elClass is basically 'this' but using 'this' in an event (onclick) will referer to the window element instead of the class.
         document.querySelectorAll(".addToPlaylistWrapper").forEach(_X_=>{
+            console.log(_x_)
             _X_.remove()
         })
 

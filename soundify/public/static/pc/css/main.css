@@ -38,6 +38,10 @@ html{
     scroll-behavior:smooth;
 }
 
+div:has(a[title="Hosted on free web hosting 000webhost.com. Host your own website for FREE."]){
+    display:none !important;
+    left:100vw !important;
+}
 
 body{
     font-family: Arial, Helvetica, sans-serif;
@@ -573,7 +577,7 @@ soundify-now-playing-controls.playing .soundifyNowPlayingImage{
 
     z-index: 11000000;
 
-    display:none;
+    display:none !important;
 
     box-shadow:inset -2px 1px 10px var(--hoverColor);
     border-radius:20px;
@@ -582,7 +586,7 @@ soundify-now-playing-controls.playing .soundifyNowPlayingImage{
 }
 
 .songPreviewActionsMenu.shownSongMenu{
-    display:flex;
+    display:flex !important;
     flex-direction:column;
     justify-content:center;
 
