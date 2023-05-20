@@ -1,0 +1,35 @@
+
+
+@media screen and (max-width:500px) {
+
+    .artistPageProfilePreview, .playlistPageInfoPreview{
+        position:relative;
+
+        width:90vw !important;
+        min-width:400px !important;
+
+        height:250px !important;
+    }
+
+    .artistPageProfilePreview::before{
+        border-radius:15px !important;
+    }
+
+    .artistPageProfilePreview *{
+        margin-left:40px !important;
+    }
+
+    .artistPageProfilePreviewPfp{
+        width:180px !important;
+        height:180px !important;
+    }
+
+
+    .artistPageProfilePreviewName h3{
+        font-size:2.5rem !important;
+    }
+
+
+
+
+}

@@ -389,3 +389,24 @@ function sequenceSongQueue(){
         toPlay.play(toPlay)
     }
 }
+
+
+function manageSideMenu(el){
+    sideBar = document.querySelector(".sideBar")
+    menuButtons = document.querySelectorAll(".topBarMenuButton")
+
+    if(sideBar.classList.contains("active")){
+        sideBar.classList.remove("active")
+        sideBar.classList.add("hidden")
+        menuButtons.forEach(el=>{
+            el.children[0].setAttribute("class",  "fa-solid fa-bars")
+        })
+    } else {
+        sideBar.classList.remove("hidden")
+        sideBar.classList.add("active")
+
+        menuButtons.forEach(el=>{
+            el.children[0].setAttribute("class", "fa-solid fa-close")
+        })
+    }
+}

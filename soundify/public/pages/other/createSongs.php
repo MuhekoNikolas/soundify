@@ -19,6 +19,9 @@
     <?php  include_once(__DIR__."/../imports/scriptsAndLinks.php"); ?>
 
     <link rel="stylesheet" href="/static/pc/css/createSongs.css">
+    <link rel="stylesheet" href="/static/mobile/css/createSongs.css">
+
+    
     <script src="/static/pc/js/createSongs.js" defer></script>
 
     <script>

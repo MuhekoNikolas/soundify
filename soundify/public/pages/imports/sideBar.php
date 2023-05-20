@@ -3,6 +3,10 @@
 
 
 <div class="sideBar">
+    <div class="topBarMenuButton" onclick="manageSideMenu(this)" style="position:fixed !important; top:40px; left:80vw; display:none;">
+        <i class="fa-solid fa-close" style="color:var(--hoverColor); font-size:1.5em;"></i>
+    </div>
+
     <h2 class="sideBarAppName"><?php out($GLOBALS["CONFIG"]["APP_NAME"]); ?></h2>
 
     <div class="sideBarSection sideBarNavigationSection">

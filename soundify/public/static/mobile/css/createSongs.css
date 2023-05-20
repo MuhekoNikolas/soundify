@@ -1,0 +1,13 @@
+
+
+
+@media screen and (max-width:500px) {
+    /* Form container */
+    form {
+        width: 80% !important; /* Width of the form */
+    }
+
+    .pageTitle{
+        font-size:3em;
+    }
+}

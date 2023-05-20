@@ -1,0 +1,284 @@
+
+
+
+@media screen and (max-width:500px) {
+    .pageWrapper{
+        left:0px;
+
+        width:100vw;
+    }
+
+
+    .pageTitle{
+        font-size:5em;
+        text-align:center;
+        margin-top:-40px;
+        margin-bottom:10px;
+    }
+
+    .pageBackgroundImageDiv{
+        left:0px;
+
+        width: 100vw;
+    }
+
+
+
+    /* STYLES THAT AFFECT THE TOP BAR*/
+    .topBar{
+        left:0px;
+
+        width: 100vw;
+    }
+
+    .topBar *{
+        text-decoration:none;
+    }
+
+    .topBarSiteName{
+        font-size:1.9em;
+    }
+
+
+    .topBarUserProfile{
+        position:fixed;
+        left: calc( 90vw - 100px );
+    }
+
+    .topBarLogoutButton{
+        display:none !important;
+    }
+
+    .topBarLoginButton{
+        display:none !important;
+    }
+
+    .topBarMenuButton{
+        position:relative;
+
+        display:flex !important;
+        font-size:1.6em;
+        margin-left:10px;
+
+        animation:2s .01s 1 phaseIn; 
+    }
+
+
+    /* STYLES THAT AFFECT THE SIDE BAR*/
+    .sideBar{
+        width:100vw;
+
+        display:none;
+    }
+
+    .sideBar.active{
+        position:fixed;
+        top:0px;
+        left:0px;
+
+        display:block;
+
+        animation:.5s .01s 1 slideIn;
+    }
+
+    .sideBar.hidden{
+        position:fixed;
+        left:-100vw;
+        top:0px;
+
+        display:none;
+        animation:.5s .01s 1 slideOut;
+    }
+
+    .sideBarAppName{
+        font-size:4em;
+
+        margin-top:180px;
+    }
+
+
+    /* Now playing element css*/
+    soundify-now-playing-controls{
+        gap:5px !important;
+    }
+
+
+    .soundifyNowPlayingImage{
+
+        width:80px !important;
+        height:80px !important;
+        aspect-ratio: 1/1;
+
+        border-radius:50%;
+
+        margin-left:10px;
+    }
+
+    .soundifyNowPlayingSongInfo{
+        margin-top:-20px;
+        font-size:1em;
+
+        min-width:250px;
+        
+        margin-right:-170px;
+
+    }
+
+
+    .nowPlayingAudioElement{
+        
+        width:800px !important;
+        min-width:150px !important;
+
+
+        margin:0px -100px;
+        margin-top:50px !important;
+
+        background:none;
+    }
+
+
+    .nowPlayingPlayModeIcon{
+        margin-top:-20px;
+    }
+
+    /* Styles for the music preview sections found at bottom of some pages*/
+    .pageMusicSection{
+        grid-template-columns:99%;
+        grid-gap:10px;
+    }
+
+    .songPreviewObject{
+        margin-bottom:10px;
+    }
+
+    .songPreviewActionsMenu{
+        top:-150px;
+        left: calc( 100% - 110px );
+    }
+
+
+    .songPreviewActionsMenu.shownSongMenu *{
+        font-size:.8em;
+        margin-top:1px;
+    }
+
+    /* CSS for the playlist section of the music preview section*/
+    .playlistPreviewObject{
+        border-radius:15px;
+    }
+
+
+    .playlistPreviewObject:before{
+        border-radius:15px;
+    }
+
+    .playlistPreviewObject:after{
+        border-radius:11px 11px 15px 15px;
+    }
+
+
+    /* CSS for the wrapper that makes it possible to add songs to playlists*/
+    .addToPlaylistWrapper{
+        left: 5vw;
+
+        width: 90vw;
+        height:450px;
+    }
+
+    .addToPlaylistWrapper:before{
+        left: 0px;
+
+        filter:blur(10px);
+    }
+
+    .addToPlaylistsWrapperCloseButton{
+        margin-top:15px;
+    }
+
+
+
+    .addToPlaylistsGridContainer{
+        position:relative;
+        
+        width:calc( 100% - 30px );
+
+        min-height:300px;
+
+        grid-template-columns:repeat(3, 100px);
+
+        grid-gap:10px;
+    }
+
+    .addToPlaylistsGridContainer .addToPlaylistPreview{
+        width:100px;
+        height:100px;
+    }
+
+    .addToPlaylistPreviewName{
+        font-size:.5;
+    }
+
+
+ 
+    /* Animations */
+    @keyframes spin{
+        0%{
+            transform:rotate(100deg);
+        }
+        50%{
+            transform:rotate(230deg);
+        }
+        100%{
+            transform:rotate(460deg);
+        }
+    }
+
+    @keyframes slideIn {
+        0%{
+            left:-100vw;
+        }
+        50%{
+            left:-50vw;
+        }
+        100%{
+            left:0px;
+        }
+    }
+
+    @keyframes slideOut {
+        0%{
+            left:0px;
+        }
+        50%{
+            left:-10vw;
+        }
+        100%{
+            left:-100vw;
+        }
+    }
+
+    @keyframes phaseIn{
+        0%{
+            opacity:0.9;
+        }
+        50%{
+            opacity:0.5;
+        }
+        100%{
+            opacity:0;
+        }
+    }
+
+    @keyframes phaseIn{
+        0%{
+            opacity:0;
+        }
+        50%{
+            opacity:0.5;
+        }
+        100%{
+            opacity:1;
+        }
+    }
+}

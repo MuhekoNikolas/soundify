@@ -5,6 +5,11 @@
         <link rel="stylesheet" href="/static/pc/css/login.css">
         <link rel="stylesheet" href="/static/pc/css/signup.css">
         <link rel="stylesheet" href="/static/pc/css/artistPage.css">
+        <link rel="stylesheet" href="/static/mobile/css/playlistPage.css">
+
+        <link rel="stylesheet" href="/static/mobile/css/main.css">
+        <link rel="stylesheet" href="/static/mobile/css/home.css">
+        <link rel="stylesheet" href="/static/mobile/css/artistPage.css">
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
